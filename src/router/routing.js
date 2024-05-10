@@ -7,6 +7,10 @@ import HomePage from '../page/Home/HomePage'
 import ProductPage from '../page/Product/ProductPage'
 import Login from '../page/Auth/Login/Login'
 import Register from '../page/Auth/Register/Register'
+import AddProduct from '../page/Product/AddProduct'
+import ListProduct from '../page/Product/ListProduct'
+import Category from '../page/Category/Category'
+import ProductDetail from '../page/Product/ProductDetail'
 
 const router = createBrowserRouter([
     {
@@ -29,7 +33,24 @@ const router = createBrowserRouter([
             },
             {
                 path: APP_ROUTER.PRODUCT,
-                element: <ProductPage />,
+                element: <ListProduct />,
+                // children: [
+                //     {
+                        
+                //     }
+                // ]
+            },
+            {
+                path: APP_ROUTER.PRODUCTDETAIL,
+                        element: <ProductDetail />
+            },
+            {
+                path: APP_ROUTER.ADD_PRODUCT,
+                element: <AddProduct />
+            },
+            {
+                path: APP_ROUTER.CATEGORY,
+                element: <Category />
             },
         ],
     },

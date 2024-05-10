@@ -1,0 +1,9 @@
+.ant-form-item-label {
+   /* Thêm các thuộc tính CSS của bạn ở đây */
+   font-size: 16px;
+   color: #333;
+   font-weight: bold;
+   background: #fff;
+   margin-right: 10px;
+   padding-left: 10px;
+ }
