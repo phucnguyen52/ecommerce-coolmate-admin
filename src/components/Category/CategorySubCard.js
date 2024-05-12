@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Modal, Form, Input, Button, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { UploadOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 const { confirm } = Modal;
 const { useForm } = Form;
 const CategorySubCard = (props) => {
@@ -36,7 +35,7 @@ const CategorySubCard = (props) => {
       setVisible(false);
    };
    const onFinish = (values) => {
-      const data={
+      const data = {
          ...value,
          Image: imageUrl
       }
@@ -73,18 +72,20 @@ const CategorySubCard = (props) => {
             <img className='w-full h-[350px] object-cover' src={value.Image} alt="" />
             <div className='text-xl font-bold p-4'>{value.Name}</div>
             <div>
-               <button
-                  className='bg-blue-400 text-white border rounded-md p-1 mr-4 font-semibold min-w-16'
-                  onClick={showModal}
-               >
-                  Sửa
-               </button>
-               <button
-                  className='bg-red-400 text-white border rounded-md p-1 font-semibold min-w-16'
-                  onClick={() => handleDelete(value.id)}
-               >
-                  Xoá
-               </button>
+               <div className='flex justify-evenly'>
+                  <button
+                     className='py-1 px-2 border rounded-md hover:border-slate-500'
+                     onClick={showModal}
+                  >
+                     <EditOutlined /> Sửa
+                  </button>
+                  <button
+                     className='py-1 px-2 border rounded-md hover:border-red-600 text-red-500'
+                     onClick={() => handleDelete(value.id)}
+                  >
+                     <DeleteOutlined /> Xoá
+                  </button>
+               </div>
                <Modal
                   title={<div className="text-2xl font-semibold mb-8">CẬP NHẬT LOẠI SẢN PHẨM</div>}
                   visible={visible}

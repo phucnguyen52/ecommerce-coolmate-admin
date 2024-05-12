@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../index.css'
-import { Button, Checkbox, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Upload } from 'antd';
+import { Button, Checkbox, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Spin, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import CategoryCard from '../../components/Category/CategoryCard';
@@ -143,16 +143,16 @@ const Category = () => {
    return (
       <>
          <div className='font-bold text-3xl mx-auto p-10 text-center'>QUẢN LÍ DANH MỤC</div>
-         <div>
-            <div className='font-bold text-xl p-5 mb-5 bg-blue-300 text-white'>LOẠI SẢN PHẨM</div>
-            {category &&
-               <div className='grid gap-4 grid-cols-5'>
+         <div className='mx-5'>
+            <div className='font-bold text-slate-600 text-2xl mb-5'>LOẠI SẢN PHẨM</div>
+            {category ?
+               <div className='grid gap-4 grid-cols-6'>
                   {category.map(item => (
                      <CategoryCard key={item.id} value={item} />
                   ))}
                   <div
                      onClick={() => setModalAddCategory(true)}
-                     className='cursor-pointer text-[100px] box-content border-2 hover:border-slate-400 hover:text-slate-400 text-slate-300 border-dashed rounded-2xl p-2 text-center '
+                     className='cursor-pointer text-[80px] box-content border-2 hover:border-slate-400 hover:text-slate-400 text-slate-300 border-dashed rounded-2xl text-center '
                   >
                      +
                   </div>
@@ -183,11 +183,15 @@ const Category = () => {
                      </Form>
                   </Modal>
                </div>
+               :
+               <div className='text-center mt-10'>
+                  <Spin size="large" />
+               </div>
             }
          </div>
-         <div>
-            <div className='font-bold text-xl p-5 my-5 bg-blue-300 text-white'>CHI TIẾT LOẠI SẢN PHẨM</div>
-            {categorySub &&
+         <div className='mx-5 mt-10'>
+            <div className='font-bold text-slate-600 text-2xl mb-5'>CHI TIẾT LOẠI SẢN PHẨM</div>
+            {categorySub ?
                <div className='grid gap-4 grid-cols-4'>
                   {categorySub.map(item => (
                      <CategorySubCard value={item} />
@@ -198,68 +202,73 @@ const Category = () => {
                   >
                      +
                   </div>
+                  <Modal
+                     title={<div className="text-2xl font-semibold mb-8">THÊM CHI TIẾT LOẠI SẢN PHẨM</div>}
+                     open={modalAddCategorySub}
+                     onCancel={() => handleCancel(setModalAddCategorySub)}
+                     footer={null} // Không hiển thị footer mặc định của modal
+                  >
+                     <Form
+                        labelAlign="left"
+                        {...layout}
+                        form={formCategorySub}
+                        name="add-categorySub"
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        className='max-w-[800px] bg-[#eff6ff] p-5 rounded-md mx-auto'
+                     >
+                        <Form.Item name="Name" label="Tên loại sản phẩm" rules={[{ required: true, }]}>
+                           <Input />
+                        </Form.Item>
+
+                        {category && category.category &&
+                           <Form.Item label="Loại" name="CategoryId" rules={[{ required: true, }]}>
+                              <Select placeholder="Chọn loại sản phẩm">
+                                 {category.category.map((item, index) => {
+                                    // console.log(item)
+                                    return (<Option key={index} value={item.id}>{item.Name}</Option>);
+                                 })}
+                              </Select>
+                           </Form.Item>
+                        }
+
+                        <Form.Item label="Ảnh" rules={[{ required: true, }]}>
+                           <Upload
+                              beforeUpload={handleBeforeUpload}
+                              showUploadList={false} // Ẩn danh sách tệp đã chọn
+                              className='flex'
+                           >
+                              <Button className='mb-4' icon={<UploadOutlined />} loading={isLoading}>Choose File</Button>
+                              {imageUrl && (
+                                 <img src={imageUrl} alt="Uploaded" className="w-[150px] h-[200px] object-cover rounded-md" />
+                              )}
+                           </Upload>
+
+                        </Form.Item>
+
+
+                        <Form.Item {...tailLayout}>
+                           <div className='flex gap-4'>
+                              <Button type="primary" htmlType="submit" disabled={isLoading}>
+                                 Submit
+                              </Button>
+                              <Button onClick={() => handleCancel(setModalAddCategorySub)}>Huỷ</Button>
+                              <Button htmlType="button" onClick={onReset}>
+                                 Reset
+                              </Button>
+                           </div>
+                        </Form.Item>
+                     </Form>
+                  </Modal>
+               </div>
+               :
+               <div className='text-center mt-10'>
+                  <Spin size="large" />
                </div>
             }
          </div>
-         <Modal
-            title={<div className="text-2xl font-semibold mb-8">THÊM CHI TIẾT LOẠI SẢN PHẨM</div>}
-            open={modalAddCategorySub}
-            onCancel={() => handleCancel(setModalAddCategorySub)}
-            footer={null} // Không hiển thị footer mặc định của modal
-         >
-<Form
-            labelAlign="left"
-            {...layout}
-            form={formCategorySub}
-            name="add-categorySub"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            className='max-w-[800px] bg-[#eff6ff] p-5 rounded-md mx-auto'
-         >
-            <Form.Item name="Name" label="Tên loại sản phẩm" rules={[{ required: true, }]}>
-               <Input />
-            </Form.Item>
-
-            {category && category.category &&
-               <Form.Item label="Loại" name="CategoryId" rules={[{ required: true, }]}>
-                  <Select placeholder="Chọn loại sản phẩm">
-                     {category.category.map((item, index) => {
-                        // console.log(item)
-                        return (<Option key={index} value={item.id}>{item.Name}</Option>);
-                     })}
-                  </Select>
-               </Form.Item>
-            }
-
-            <Form.Item label="Ảnh" rules={[{ required: true, }]}>
-               <Upload
-                  beforeUpload={handleBeforeUpload}
-                  showUploadList={false} // Ẩn danh sách tệp đã chọn
-                  className='flex'
-               >
-                  <Button className='mb-4' icon={<UploadOutlined />} loading={isLoading}>Choose File</Button>
-                  {imageUrl && (
-                     <img src={imageUrl} alt="Uploaded" className="w-[150px] h-[200px] object-cover rounded-md" />
-                  )}
-               </Upload>
-
-            </Form.Item>
 
 
-            <Form.Item {...tailLayout}>
-               <div className='flex gap-4'>
-                  <Button  type="primary" htmlType="submit" disabled={isLoading}>
-                     Submit
-                  </Button>
-                  <Button onClick={() => handleCancel(setModalAddCategorySub)}>Huỷ</Button>
-                  <Button htmlType="button" onClick={onReset}>
-                     Reset
-                  </Button>
-               </div>
-            </Form.Item>
-         </Form>
-         </Modal>
-         
       </>
    );
 };

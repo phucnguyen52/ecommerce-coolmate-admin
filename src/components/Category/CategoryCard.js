@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { ExclamationCircleFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Modal, Form, Input, Button } from 'antd';
-
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { confirm } = Modal;
 const { useForm } = Form;
 const CategoryCard = (props) => {
@@ -44,20 +42,23 @@ const CategoryCard = (props) => {
   return (
     <>
       <div className='border rounded-2xl p-2 text-center flex flex-col justify-between'>
-        <div className='text-3xl font-bold p-8'>{value.Name}</div>
+        <div className='text-2xl font-bold p-4'>{value.Name}</div>
         <div>
-          <button
-            className='bg-blue-400 text-white border rounded-md p-1 mr-4 font-semibold min-w-16'
-            onClick={showModal}
-          >
-            Sửa
-          </button>
-          <button
-            className='bg-red-400 text-white border rounded-md p-1 font-semibold min-w-16'
-            onClick={() => handleDelete(value.id)}
-          >
-            Xoá
-          </button>
+          <div className='flex gap-4 justify-center'>
+            <button
+              className='py-1 px-2 border rounded-md hover:border-slate-500'
+              onClick={showModal}
+            >
+              <EditOutlined /> Sửa
+            </button>
+            <button
+              className='py-1 px-2 border rounded-md hover:border-red-600 text-red-500'
+              onClick={() => handleDelete(value.id)}
+            >
+              <DeleteOutlined /> Xoá
+            </button>
+          </div>
+
           <Modal
             title={<div className="text-2xl font-semibold mb-8">CẬP NHẬT LOẠI SẢN PHẨM</div>}
             visible={visible}
@@ -71,12 +72,12 @@ const CategoryCard = (props) => {
               onFinish={onFinish}
             >
               <Form.Item
-               
+
                 label="Tên Loại sản phẩm mới"
                 name="Name"
                 rules={[{ required: true }]}
               >
-                <Input  className='bg-black'/>
+                <Input className='bg-black' />
               </Form.Item>
               <Form.Item className='mb-0'>
                 <Button type="primary" htmlType="submit" className='mr-4'>

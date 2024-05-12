@@ -3,14 +3,13 @@ import { APP_ROUTER } from '../utils/Constants'
 import MainLayout from '../layout/Main/MainLayout'
 import AuthLayout from '../layout/Auth/AuthLayout'
 import HomePage from '../page/Home/HomePage'
-
-import ProductPage from '../page/Product/ProductPage'
 import Login from '../page/Auth/Login/Login'
 import Register from '../page/Auth/Register/Register'
 import AddProduct from '../page/Product/AddProduct'
 import ListProduct from '../page/Product/ListProduct'
 import Category from '../page/Category/Category'
 import ProductDetail from '../page/Product/ProductDetail'
+import Test from '../page/Product/Test'
 
 const router = createBrowserRouter([
     {
@@ -36,13 +35,13 @@ const router = createBrowserRouter([
                 element: <ListProduct />,
                 // children: [
                 //     {
-                        
+
                 //     }
                 // ]
             },
             {
                 path: APP_ROUTER.PRODUCTDETAIL,
-                        element: <ProductDetail />
+                element: <ProductDetail />
             },
             {
                 path: APP_ROUTER.ADD_PRODUCT,
@@ -52,7 +51,13 @@ const router = createBrowserRouter([
                 path: APP_ROUTER.CATEGORY,
                 element: <Category />
             },
+
         ],
+    },
+    
+    {
+        path: '/test',
+        element: <Test />
     },
 
     {

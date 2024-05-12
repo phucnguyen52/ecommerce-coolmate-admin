@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from '../../components/Product/ProductCard';
+import { Spin } from 'antd';
 
 const ListProduct = () => {
    const [products, setProducts] = useState()
@@ -30,12 +31,12 @@ const ListProduct = () => {
    const buttonPage = (num) => {
       return (
          [...Array(num)].map((item, index) => (
-            <button 
-            className={`border py-1 px-4 hover:border-blue-400 hover:text-blue-500 ${page===(index+1) ? ' border-blue-400 text-blue-500' : ''}`}
-            onClick={()=>handlePage(index+1)}
+            <button
+               className={`border py-1 px-4 hover:border-blue-400 hover:text-blue-500 ${page === (index + 1) ? ' border-blue-400 text-blue-500' : ''}`}
+               onClick={() => handlePage(index + 1)}
             >
-               {index+1}
-               </button>
+               {index + 1}
+            </button>
          ))
       );
    }
@@ -45,7 +46,7 @@ const ListProduct = () => {
    return (
       <>
          <div className='font-bold text-3xl mx-auto p-10 text-center'>QUẢN LÍ SẢN PHẨM</div>
-         {products && products.products &&
+         {products && products.products ?
             <>
                <div className='grid grid-cols-5 gap-4'>
                   {products.products.map(item => {
@@ -56,6 +57,10 @@ const ListProduct = () => {
                   {buttonPage(Math.ceil(products.count / 10))}
                </div>
             </>
+            :
+            <div className='text-center mt-10'>
+               <Spin size="large" />
+            </div>
          }
 
       </>

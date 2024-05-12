@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../index.css'
-import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select, Space, Upload } from 'antd';
+import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 const { Option } = Select;

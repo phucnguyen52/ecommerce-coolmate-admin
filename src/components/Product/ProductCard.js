@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import StarRating from './StarRating';
-import {
-   DeleteOutlined,
-   EditOutlined,
-   StarFilled
-} from '@ant-design/icons';
+import {DeleteOutlined, EditOutlined, StarFilled, ExclamationCircleFilled } from '@ant-design/icons';
+import { Modal, Form, Input, Button } from 'antd';
+
+const { confirm } = Modal;
 
 const ProductCard = (props) => {
    const { value } = props
@@ -53,6 +51,24 @@ const ProductCard = (props) => {
       fetchVariant()
       fetchRating()
    }, [])
+
+   const handleDelete = (id) => {
+      confirm({
+         title: 'Bạn có chắc chắn xoá loại sản phẩm này?',
+         icon: <ExclamationCircleFilled />,
+         //   content: 'Some descriptions',
+         okText: 'Yes',
+         okType: 'danger',
+         cancelText: 'No',
+         onOk() {
+            console.log(id);
+         },
+         onCancel() {
+            console.log('Cancel');
+         },
+      });
+   };
+
    return (
       <>
          <div className="w-full flex flex-col justify-between shadow-md rounded-md">
@@ -94,11 +110,19 @@ const ProductCard = (props) => {
                      }
                   </>
                }
-               <div>Đã bán: {value.QuantitySell}</div>
-               {variant && <div>Còn lại: {variant.reduce((accumulator, currentValue) => accumulator + currentValue.quantity, 0)}</div>}
-               <div className='flex justify-evenly'>
-                  <button className='py-1 px-2 border rounded-md hover:border-slate-500'><EditOutlined />  Sửa</button>
-                  <button className='py-1 px-2 border rounded-md hover:border-red-600 text-red-500'><DeleteOutlined /> Xoá</button>
+               <div className='flex justify-evenly mt-3 mb-1'>
+                  <button
+                     className='py-1 px-2 border rounded-md hover:border-slate-500'
+
+                  >
+                     <EditOutlined />  Sửa
+                  </button>
+                  <button
+                  onClick={()=>handleDelete(value.id)}
+                     className='py-1 px-2 border rounded-md hover:border-red-600 text-red-500'
+                  >
+                     <DeleteOutlined /> Xoá
+                  </button>
                </div>
             </div>
 
