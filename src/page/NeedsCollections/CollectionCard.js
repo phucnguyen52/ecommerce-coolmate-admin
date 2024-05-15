@@ -9,12 +9,12 @@ import { toast } from "react-toastify";
 import axios from "axios";
 const { confirm } = Modal;
 const { useForm } = Form;
-const CategoryCard = (props) => {
-    const { value, fetchAPICategory } = props;
+const CollectionCard = (props) => {
+    const { value, fetchAPICollection } = props;
     // console.log(value)
     const handleDelete = (id) => {
         confirm({
-            title: "Bạn có chắc chắn xoá loại sản phẩm này?",
+            title: "Bạn có chắc chắn xoá bộ sưu tập này?",
             icon: <ExclamationCircleFilled />,
             //   content: 'Some descriptions',
             okText: "Yes",
@@ -22,17 +22,18 @@ const CategoryCard = (props) => {
             cancelText: "No",
             onOk() {
                 console.log(id);
-                const handleRemoveCategory = async (id) => {
+                const handleRemoveCollection = async (id) => {
                     try {
                         const response = await axios.delete(
-                            `http://localhost:8080/api/category/${id}`,
+                            `http://localhost:8080/api/collection/${id}`,
                             {
                                 withCredentials: true,
                             }
                         );
                         if (response.status === 200) {
-                            console.log("Xóa danh mục thành công.");
-                            toast.success("Đã xóa danh mục thành công", {
+                            console.log("Xóa bộ sưu tập thành công.");
+                            fetchAPICollection();
+                            toast.success("Đã xóa bộ sưu tập thành công", {
                                 position: "top-right",
                                 autoClose: 1000,
                                 hideProgressBar: true,
@@ -41,7 +42,6 @@ const CategoryCard = (props) => {
                                 draggable: true,
                                 progress: undefined,
                             });
-                            fetchAPICategory();
                         }
                     } catch (error) {
                         console.error(
@@ -50,7 +50,7 @@ const CategoryCard = (props) => {
                         );
                     }
                 };
-                handleRemoveCategory(id);
+                handleRemoveCollection(id);
             },
             onCancel() {
                 console.log("Cancel");
@@ -72,14 +72,15 @@ const CategoryCard = (props) => {
 
     const onFinish = (values) => {
         const req = { Name: values.Name };
-        const handleUpdateCategory = async () => {
+        const handleUpdateCollection = async () => {
             await axios.put(
-                `http://localhost:8080/api/category/${value.id}`,
+                `http://localhost:8080/api/collection/${value.id}`,
                 req
             );
-            console.log("Đã cập nhật danh mục thành công");
-            fetchAPICategory();
-            toast.success("Đã cập nhật danh mục thành công", {
+
+            console.log("Đã cập nhật bộ sưu tập thành công");
+            fetchAPICollection();
+            toast.success("Đã cập nhật bộ sưu tập thành công", {
                 position: "top-right",
                 autoClose: 1000,
                 hideProgressBar: true,
@@ -89,14 +90,16 @@ const CategoryCard = (props) => {
                 progress: undefined,
             });
         };
-        handleUpdateCategory();
+        handleUpdateCollection();
 
-        setVisible(false); // Ẩn modal sau khi submit thành công
+        setVisible(false);
     };
     return (
         <>
             <div className="border rounded-2xl p-2 text-center flex flex-col justify-between">
-                <div className="text-2xl font-bold p-4">{value.Name}</div>
+                <div className="text-2xl font-bold p-4 my-auto">
+                    {value.Name}
+                </div>
                 <div>
                     <div className="flex gap-4 justify-center">
                         <button
@@ -116,7 +119,7 @@ const CategoryCard = (props) => {
                     <Modal
                         title={
                             <div className="text-2xl font-semibold mb-8">
-                                CẬP NHẬT LOẠI SẢN PHẨM
+                                CẬP NHẬT BỘ SƯU TẬP
                             </div>
                         }
                         visible={visible}
@@ -130,7 +133,7 @@ const CategoryCard = (props) => {
                             onFinish={onFinish}
                         >
                             <Form.Item
-                                label="Tên Loại sản phẩm mới"
+                                label="Tên Bộ sưu tập mới"
                                 name="Name"
                                 rules={[{ required: true }]}
                             >
@@ -154,4 +157,4 @@ const CategoryCard = (props) => {
     );
 };
 
-export default CategoryCard;
+export default CollectionCard;

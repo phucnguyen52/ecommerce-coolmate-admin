@@ -8,9 +8,14 @@ export const APP_ROUTER = {
     PRODUCT: "/product",
     PRODUCTDETAIL: `/product/:id`,
     ADD_PRODUCT: "/product/add-product",
-
+    LISTUSER: "/user",
     CATEGORY: "/category",
-
+    NEEDS_COLLECTIONS: "/needs-collection",
+    ORDER: "/order",
+    ORDERDELIVERED: "/order_delivered",
+    ORDERDELIVERING: "/order_delivering",
+    ORDERTRANS: "/order_trans",
+    ORDERWAIT: "/order_wait",
     AUTH: "auth",
     LOGIN: "/auth/login",
     REGISTER: "/auth/register",

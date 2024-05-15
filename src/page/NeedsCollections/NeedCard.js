@@ -5,14 +5,15 @@ import {
     EditOutlined,
 } from "@ant-design/icons";
 import { Modal, Form, Input, Button } from "antd";
-import { toast } from "react-toastify";
 import axios from "axios";
+import { toast } from "react-toastify";
 const { confirm } = Modal;
 const { useForm } = Form;
-const CategoryCard = (props) => {
-    const { value, fetchAPICategory } = props;
+const NeedCard = (props) => {
+    const { value, fetchAPINeed } = props;
     // console.log(value)
     const handleDelete = (id) => {
+        console.log(id);
         confirm({
             title: "Bạn có chắc chắn xoá loại sản phẩm này?",
             icon: <ExclamationCircleFilled />,
@@ -22,17 +23,18 @@ const CategoryCard = (props) => {
             cancelText: "No",
             onOk() {
                 console.log(id);
-                const handleRemoveCategory = async (id) => {
+                const handleRemoveNeed = async (id) => {
                     try {
                         const response = await axios.delete(
-                            `http://localhost:8080/api/category/${id}`,
+                            `http://localhost:8080/api/need/${id}`,
                             {
                                 withCredentials: true,
                             }
                         );
                         if (response.status === 200) {
-                            console.log("Xóa danh mục thành công.");
-                            toast.success("Đã xóa danh mục thành công", {
+                            console.log("Xóa nhu cầu thành công.");
+                            fetchAPINeed();
+                            toast.success("Đã xóa nhu cầu thành công", {
                                 position: "top-right",
                                 autoClose: 1000,
                                 hideProgressBar: true,
@@ -41,16 +43,12 @@ const CategoryCard = (props) => {
                                 draggable: true,
                                 progress: undefined,
                             });
-                            fetchAPICategory();
                         }
                     } catch (error) {
-                        console.error(
-                            "Lỗi khi gửi yêu cầu xóa bộ sưu tập",
-                            error
-                        );
+                        console.error("Lỗi khi gửi yêu cầu xóa nhu cầu", error);
                     }
                 };
-                handleRemoveCategory(id);
+                handleRemoveNeed(id);
             },
             onCancel() {
                 console.log("Cancel");
@@ -65,38 +63,71 @@ const CategoryCard = (props) => {
     const showModal = () => {
         setVisible(true);
     };
-
     const handleCancel = () => {
         setVisible(false);
     };
-
     const onFinish = (values) => {
-        const req = { Name: values.Name };
-        const handleUpdateCategory = async () => {
-            await axios.put(
-                `http://localhost:8080/api/category/${value.id}`,
-                req
-            );
-            console.log("Đã cập nhật danh mục thành công");
-            fetchAPICategory();
-            toast.success("Đã cập nhật danh mục thành công", {
-                position: "top-right",
-                autoClose: 1000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        };
-        handleUpdateCategory();
+        const req = { NeedName: values.Name };
+        const handleUpdateNeed = async () => {
+            try {
+                const response = await axios.put(
+                    `http://localhost:8080/api/need/${value.id}`,
+                    req
+                );
 
-        setVisible(false); // Ẩn modal sau khi submit thành công
+                if (response.data.succes) {
+                    console.log("Đã cập nhật nhu cầu thành công");
+                    fetchAPINeed();
+                    toast.success("Đã cập nhật nhu cầu thành công", {
+                        position: "top-right",
+                        autoClose: 1000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                } else {
+                    console.error(
+                        "Có lỗi xảy ra khi cập nhật nhu cầu:",
+                        response.data.message
+                    );
+                    // Xử lý thông báo lỗi
+                    toast.error(response.data.message, {
+                        position: "top-right",
+                        autoClose: 1000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
+            } catch (error) {
+                console.error("Có lỗi xảy ra khi cập nhật nhu cầu:", error);
+                // Xử lý lỗi nếu cần
+                toast.error("Có lỗi xảy ra khi cập nhật nhu cầu", {
+                    position: "top-right",
+                    autoClose: 1000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        };
+
+        handleUpdateNeed();
+
+        setVisible(false);
     };
     return (
         <>
             <div className="border rounded-2xl p-2 text-center flex flex-col justify-between">
-                <div className="text-2xl font-bold p-4">{value.Name}</div>
+                <div className="text-2xl font-bold p-4 my-auto">
+                    {value.NeedName}
+                </div>
                 <div>
                     <div className="flex gap-4 justify-center">
                         <button
@@ -116,7 +147,7 @@ const CategoryCard = (props) => {
                     <Modal
                         title={
                             <div className="text-2xl font-semibold mb-8">
-                                CẬP NHẬT LOẠI SẢN PHẨM
+                                CẬP NHẬT NHU CẦU
                             </div>
                         }
                         visible={visible}
@@ -126,11 +157,11 @@ const CategoryCard = (props) => {
                         <Form
                             form={form}
                             name="myForm"
-                            initialValues={{ Name: value.Name }}
+                            initialValues={{ Name: value.NeedName }}
                             onFinish={onFinish}
                         >
                             <Form.Item
-                                label="Tên Loại sản phẩm mới"
+                                label="Tên Nhu cầu mới"
                                 name="Name"
                                 rules={[{ required: true }]}
                             >
@@ -154,4 +185,4 @@ const CategoryCard = (props) => {
     );
 };
 
-export default CategoryCard;
+export default NeedCard;
