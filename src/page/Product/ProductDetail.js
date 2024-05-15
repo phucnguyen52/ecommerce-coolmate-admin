@@ -52,7 +52,10 @@ const ProductDetail = () => {
         // fetchRating()
     }, [])
 
-
+    const checkSize = (variant) => {
+        const check = (variant.filter(item => item.size !== '')).length
+        return check ? true : false
+    }
 
     function ButtonNext(props) {
         const { onClick } = props
@@ -140,28 +143,49 @@ const ProductDetail = () => {
                             <div className='my-4'>
                                 <div className='font-bold underline mb-4 text-lg'>Số lượng trong kho:</div>
                                 <Table
-                                  pagination={false}
-                                    columns={[{
-                                        title: 'Màu/Size',
-                                        dataIndex: 'color',
-                                        rowScope: 'row',
-                                        key: 'color'
-                                    },
-                                    ...sizeDefault.map((item) => ({
-                                        title: item,
-                                        dataIndex: item,
-                                        key: item
-                                    }))
-                                    ]}
-                                    dataSource={data && [...new Set(data.VariantProducts.map((item) => item.color))].map((item, index) => ({
+                                    pagination={false}
+                                    columns={checkSize(data.VariantProducts)
+                                        ?
+                                        [{
+                                            title: 'Màu/Size',
+                                            dataIndex: 'color',
+                                            rowScope: 'row',
+                                            key: 'color'
+                                        },
+                                        ...sizeDefault.map((item) => ({
+                                            title: item,
+                                            dataIndex: item,
+                                            key: item
+                                        }))]
+                                        :
+                                        [{
+                                            title: 'Màu',
+                                            dataIndex: 'color',
+                                            rowScope: 'row',
+                                            key: 'color'
+                                        },
+                                        {
+                                            title: 'Số lượng',
+                                            dataIndex: 'quantity',
+                                            key: 'quantity'
+                                        }]
+                                    }
+                                    dataSource={data && (checkSize(data.VariantProducts)?[...new Set(data.VariantProducts.map((item) => item.color))].map((item, index) => ({
                                         key: index,
                                         color: item,
                                         ...sizeDefault.reduce((acc, i) => {
-                                            const variant = data.VariantProducts.filter(a => a.color === item && a.size === i)
-                                            acc[i] = variant.length ? variant[0].quantity : '-'
-                                            return acc;
-                                        }, {})
-                                    }))}
+                                                const variant = data.VariantProducts.filter(a => a.color === item && a.size === i)
+                                                acc[i] = variant.length ? variant[0].quantity : '-'
+                                                return acc;
+                                            }, {}) 
+                                       
+                                    }))
+                                : data.VariantProducts.map((item, index)=>({
+                                    key: index,
+                                    color: item.color,
+                                    quantity: item.quantity
+                                }))
+                            )}
                                 />
                             </div>
 

@@ -8,11 +8,12 @@ const ListProduct = () => {
 
    const fetProduct = async () => {
       try {
-         const req = await fetch(`http://localhost:8080/api/products?min=0&max=1000000&size=L&page=${page}`)
+         const req = await fetch(`http://localhost:8080/api/products?min=0&max=1000000&page=${page}`)
          const res = await req.json();
          if (res.succes) {
             console.log(res);
             setProducts(res.product)
+            if(page>Math.ceil(res.product.count / 10)) setPage(Math.ceil(res.product.count / 10))
          } else console.log(res.message)
 
       } catch (error) {
@@ -32,6 +33,7 @@ const ListProduct = () => {
       return (
          [...Array(num)].map((item, index) => (
             <button
+               key={index}
                className={`border py-1 px-4 hover:border-blue-400 hover:text-blue-500 ${page === (index + 1) ? ' border-blue-400 text-blue-500' : ''}`}
                onClick={() => handlePage(index + 1)}
             >
@@ -50,11 +52,14 @@ const ListProduct = () => {
             <>
                <div className='grid grid-cols-5 gap-4'>
                   {products.products.map(item => {
-                     return <ProductCard key={item.id} value={item} />
+                     return <ProductCard fetchProduct={fetProduct} key={item.id} value={item} />
                   })}
                </div>
                <div className='flex gap-2 mt-[100px]'>
-                  {buttonPage(Math.ceil(products.count / 10))}
+                  {
+                  buttonPage(Math.ceil(products.count / 10))
+                  // console.log(Math.ceil(products.count,products.count / 10))
+                  }
                </div>
             </>
             :

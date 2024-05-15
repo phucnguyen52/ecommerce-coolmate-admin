@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../index.css'
 import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, CloseOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 const { Option } = Select;
 const layout = {
@@ -20,7 +20,6 @@ const AddProduct = () => {
    const [need, setNeed] = useState()
    const [collection, setCollection] = useState()
    const [categorySub, setCategorySub] = useState()
-   const [category, setCategory] = useState()
    const [imageUrl, setImageUrl] = useState([]);
    const [isLoading, setIsLoading] = useState(false)
 
@@ -35,64 +34,24 @@ const AddProduct = () => {
          setNeed(await fetchapi('need'));
          setCollection(await fetchapi('collection'));
          setCategorySub(await fetchapi('categorysub'));
-         setCategory(await fetchapi('category'))
       }
       set()
    }, [])
    // console.log("CategorySubId", category)
 
    const onFinish = async (values) => {
-      const test = values.DescriptionProducts.split('\n').join('\u005C\u005C\u005C\u005C');
-      console.log(test)
-      if (values.NameNeed) {
-         const need = {
-            NeedName: values.NameNeed
-         }
-         try {
-            const req = await fetch(`http://localhost:8080/api/need`,
-               {
-                  method: "POST",
-                  headers: {
-                     "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify(need)
-               })
-
-            if (!req.ok) {
-               throw new Error('Thêm nhu cầu không thành công');
-            }
-            const res = await req.json();
-            if (res.needs.id) values.NeedID.push(res.needs.id)
-         } catch (error) {
-            console.error('Error adding need:', error.message);
-            throw error;
-         }
-         values.NeedID = values.NeedID.filter(item => item !== 'other')
-      }
-      if (values.NameCollection) {
-         const collection = {
-            Name: values.NameCollection
-         }
-         try {
-            const req = await fetch(`http://localhost:8080/api/collection`,
-               {
-                  method: "POST",
-                  headers: {
-                     "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify(collection)
-               })
-
-            if (!req.ok) {
-               throw new Error('Thêm bộ sưu tập không thành công');
-            }
-            const res = await req.json();
-            if (res.collection.id) values.CollectionID.push(res.collection.id)
-         } catch (error) {
-            console.error('Error adding collection:', error.message);
-            throw error;
-         }
-         values.NeedID = values.NeedID.filter(item => item !== 'other')
+      if (!imageUrl.length) {
+         toast.warning("Vui lòng chọn ảnh", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+         });
+         console.log(imageUrl)
+         return 0;
       }
       const product = {
          CategorySubId: values.CategorySubId,
@@ -102,7 +61,7 @@ const AddProduct = () => {
          NeedID: values.NeedID,
          Price: values.Price,
          NameProducts: values.NameProducts,
-         Image: imageUrl
+         Image: JSON.stringify(imageUrl)
       }
       console.log("product", product);
 
@@ -138,7 +97,10 @@ const AddProduct = () => {
       form.resetFields();
       setImageUrl([]);
    };
-
+   const DeleteImg = (img) => {
+      const image = imageUrl.filter(item => item !== img);
+      setImageUrl(image)
+   }
    const handleBeforeUpload = async (file) => {
       const formData = new FormData();
       formData.append('images', file);
@@ -356,7 +318,17 @@ const AddProduct = () => {
                   <p>Image URL:</p>
                   <div className="flex gap-4 my-4">
                      {imageUrl.map(item => {
-                        return <div key={item} className="w-[300px] h-[400px] border border-blue-300 p-2 rounded-md"><img src={item} alt="Uploaded" className="w-full h-full object-cover" /></div>
+                        return (
+                           <div key={item} className="w-[150px] h-[200px] relative">
+                              <img src={item} alt="Uploaded" className="w-full h-full object-cover rounded-md" />
+                              <div
+                                 onClick={() => DeleteImg(item)}
+                                 className='absolute top-0 right-1.5 cursor-pointer'
+                              >
+                                 <CloseOutlined />
+                              </div>
+                           </div>
+                        );
                      })}
                   </div>
 

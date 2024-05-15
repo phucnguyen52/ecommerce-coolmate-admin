@@ -4,9 +4,9 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import {
     DesktopOutlined,
-    FileOutlined,
+    AppstoreAddOutlined ,
     PieChartOutlined,
-    TeamOutlined,
+    AppstoreOutlined ,
     UserOutlined,
 } from '@ant-design/icons';
 import {  Layout, Menu, theme } from 'antd';
@@ -31,9 +31,11 @@ function MainLayout() {
         getItem('Sản phẩm', 'sub1', <UserOutlined />, [
             getItem(<Link to={APP_ROUTER.ADD_PRODUCT}>Thêm sản phẩm</Link>, '3'),
             getItem(<Link to={APP_ROUTER.PRODUCT}>Danh sách các sản phẩm</Link>, '4'),
+        ]),        
+        getItem('Quản lí kho', 'sub2', <UserOutlined />, [
+            getItem(<Link to={APP_ROUTER.ADD_STORE}>Nhập kho</Link>, '9', <AppstoreAddOutlined />),
+            getItem(<Link to={APP_ROUTER.STORE}>Danh sách nhập kho</Link>, '10', <AppstoreOutlined />),
         ]),
-        getItem('Team', 'sub2',<TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-        getItem('Files', '9', <FileOutlined />),
     ]
     return (
         <>
@@ -56,7 +58,7 @@ function MainLayout() {
                             }}
                         >
                             <Outlet />
-                            <div>main layout</div>
+                            {/* <div>main layout</div> */}
                         </Content>
                     </Layout>
                 </Layout>

@@ -8,7 +8,8 @@ export const APP_ROUTER = {
     PRODUCT: "/product",
     PRODUCTDETAIL: `/product/:id`,
     ADD_PRODUCT: "/product/add-product",
-
+    STORE: "/store",
+    ADD_STORE: "/store/add-store",
     CATEGORY: "/category",
 
     AUTH: "auth",

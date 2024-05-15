@@ -10,6 +10,8 @@ import ListProduct from '../page/Product/ListProduct'
 import Category from '../page/Category/Category'
 import ProductDetail from '../page/Product/ProductDetail'
 import Test from '../page/Product/Test'
+import Store from '../page/Store/Store'
+import AddStore from '../page/Store/AddStore'
 
 const router = createBrowserRouter([
     {
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
             {
                 path: APP_ROUTER.CATEGORY,
                 element: <Category />
+            },
+            {
+                path: APP_ROUTER.STORE,
+                element: <Store />
+            },
+            {
+                path: APP_ROUTER.ADD_STORE,
+                element: <AddStore />
             },
 
         ],
