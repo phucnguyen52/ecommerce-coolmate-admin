@@ -9,22 +9,27 @@ import AddProduct from '../page/Product/AddProduct'
 import ListProduct from '../page/Product/ListProduct'
 import Category from '../page/Category/Category'
 import ProductDetail from '../page/Product/ProductDetail'
-import Test from '../page/Product/Test'
+import NeedsCollections from "../page/NeedsCollections/NeedsCollections";
+import OrderDelivered from "../page/Order/OrderDelivered";
+import OrderDelivering from "../page/Order/OrderDelivering";
+import OrderTransport from "../page/Order/OrderTransport";
+import OrderWaitConfirm from "../page/Order/OrderWaitConfirm";
+import Order from "../page/Order/Order";
+import ListUser from "../page/User/ListUser";
 import Store from '../page/Store/Store'
 import AddStore from '../page/Store/AddStore'
-
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: "/",
         loader: () => {
-            if (!localStorage.getItem('user')) {
-                throw redirect(APP_ROUTER.HOME)
+            if (!localStorage.getItem("user")) {
+                throw redirect(APP_ROUTER.LOGIN);
             }
-            return null
+            return null;
         },
     },
     {
-        path: '/',
+        path: "/",
         element: <MainLayout />,
         children: [
             {
@@ -35,23 +40,46 @@ const router = createBrowserRouter([
             {
                 path: APP_ROUTER.PRODUCT,
                 element: <ListProduct />,
-                // children: [
-                //     {
-
-                //     }
-                // ]
             },
             {
                 path: APP_ROUTER.PRODUCTDETAIL,
-                element: <ProductDetail />
+                element: <ProductDetail />,
             },
             {
                 path: APP_ROUTER.ADD_PRODUCT,
-                element: <AddProduct />
+                element: <AddProduct />,
             },
             {
                 path: APP_ROUTER.CATEGORY,
-                element: <Category />
+                element: <Category />,
+            },
+            {
+                path: APP_ROUTER.NEEDS_COLLECTIONS,
+                element: <NeedsCollections />,
+            },
+            {
+                path: APP_ROUTER.ORDER,
+                element: <Order />,
+            },
+            {
+                path: APP_ROUTER.ORDERDELIVERED,
+                element: <OrderDelivered />,
+            },
+            {
+                path: APP_ROUTER.ORDERDELIVERING,
+                element: <OrderDelivering />,
+            },
+            {
+                path: APP_ROUTER.ORDERTRANS,
+                element: <OrderTransport />,
+            },
+            {
+                path: APP_ROUTER.ORDERWAIT,
+                element: <OrderWaitConfirm />,
+            },
+            {
+                path: APP_ROUTER.LISTUSER,
+                element: <ListUser />,
             },
             {
                 path: APP_ROUTER.STORE,
@@ -61,15 +89,8 @@ const router = createBrowserRouter([
                 path: APP_ROUTER.ADD_STORE,
                 element: <AddStore />
             },
-
         ],
     },
-    
-    {
-        path: '/test',
-        element: <Test />
-    },
-
     {
         path: APP_ROUTER.AUTH,
         element: <AuthLayout />,
@@ -85,6 +106,6 @@ const router = createBrowserRouter([
             },
         ],
     },
-])
+]);
 
-export default router
+export default router;
