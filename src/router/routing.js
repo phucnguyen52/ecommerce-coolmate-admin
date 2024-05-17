@@ -57,8 +57,12 @@ const router = createBrowserRouter([
                 path: APP_ROUTER.NEEDS_COLLECTIONS,
                 element: <NeedsCollections />,
             },
+            // {
+            //     path: APP_ROUTER.ORDER,
+            //     element: <Order />,
+            // },
             {
-                path: APP_ROUTER.ORDER,
+                path: '/order/:id',
                 element: <Order />,
             },
             {

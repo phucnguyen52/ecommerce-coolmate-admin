@@ -192,9 +192,9 @@ const AddStore = () => {
                      return (
                         <>
                            <tr className='text-black bg-white' key={index}>
-                              <td className='p-2 text-center border' rowSpan={item.variants.length}>{index + 1}</td>
-                              <td className='p-2 text-center border' rowSpan={item.variants.length}>{item.ProductId}</td>
-                              <td className='p-2 border' rowSpan={item.variants.length}>{item.Name}</td>
+                              <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{index + 1}</td>
+                              <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{item.ProductId}</td>
+                              <td className='align-top p-2 border' rowSpan={item.variants.length}>{item.Name}</td>
                               <td className='p-2 text-center border'>{item.variants[0].color}</td>
                               <td className='p-2 text-center border'>{item.variants[0].size}</td>
                               <td className='p-2 text-center border'>{item.variants[0].quantity}</td>

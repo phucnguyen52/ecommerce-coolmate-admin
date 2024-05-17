@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import { FaHouseUser } from "react-icons/fa";
 const ListUser = () => {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState();
     const [page, setPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [searched, setSearched] = useState(false);
@@ -13,7 +13,7 @@ const ListUser = () => {
             );
             const res = await req.json();
             if (res.succes) {
-                console.log(res);
+                console.log("res.user",res.user)
                 setUsers(res.user);
                 setSearched(true);
             } else console.log(res.message);
@@ -32,6 +32,7 @@ const ListUser = () => {
     const buttonPage = (num) => {
         return [...Array(num)].map((item, index) => (
             <button
+            key={index}
                 className={`border py-1 px-4 hover:border-blue-400 hover:text-blue-500 ${
                     page === index + 1 ? " border-blue-400 text-blue-500" : ""
                 }`}
@@ -49,7 +50,8 @@ const ListUser = () => {
                 );
                 const res = await req.json();
                 if (res.succes) {
-                    setUsers(res.user);
+                    setUsers(res);
+                    console.log("res.user",res)
                     setSearched(false);
                 } else {
                     console.log(res.message);
@@ -59,12 +61,14 @@ const ListUser = () => {
             }
         }
     };
+    console.log(users)
     const handleChange = (e) => {
         const { value } = e.target;
         setSearchTerm(value);
         if (value === "") {
             fetchUser();
-            setSearched(true);
+            setSearched(false);
+
         }
     };
     return (
@@ -149,7 +153,7 @@ const ListUser = () => {
                     </thead>
                     <tbody>
                         {users ? (
-                            users.map((user, i) => (
+                            users.user.map((user, i) => (
                                 <tr
                                     key={i}
                                     className="border-b border-gray-200 dark:border-gray-700"
@@ -180,7 +184,7 @@ const ListUser = () => {
                 {searched && (
                     <>
                         <div className="flex gap-2 mt-20 items-center justify-center">
-                            {users ? buttonPage(Math.ceil(45 / 20)) : null}
+                            {users ? buttonPage(Math.ceil(users?.count / 20)) : null}
                         </div>
                     </>
                 )}

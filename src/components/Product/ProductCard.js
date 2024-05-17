@@ -294,7 +294,7 @@ const ProductCard = (props) => {
                   {...layout}
                   name="update-product"
                   initialValues={data && {
-                     CategorySubId: data.CategorySub.id,
+                     CategorySubId: data.CategorySub,
                      CollectionID: data.Collections.map(item => item.id),
                      DescriptionProducts: data.DescriptionProducts.replace(/\\\\/g, '\n'),
                      Discount: data.Discount,
