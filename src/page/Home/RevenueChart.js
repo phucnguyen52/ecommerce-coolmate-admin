@@ -18,7 +18,7 @@ const RevenueChart = () => {
          if (res.succes) {
             setData(res.sale.map(item => ({
                data: item.Month || item.OrderDate.slice(-2),
-               sale: (item.sale || item.totalPrice)
+               sale: (item.sale || item.totalPrice) * 1000
             })))
          } else {
             console.error('Revenue sales: failed')
@@ -35,9 +35,19 @@ const RevenueChart = () => {
    useEffect(() => {
       fetData()
    }, [value])
+
+   const CustomYAxisTick = ({ x, y, payload }) => {
+      return (
+        <text x={x} y={y} textAnchor="end" fill="#666" dy={4}>
+          {new Intl.NumberFormat().format(payload.value)}
+        </text>
+      );
+    };
+    const numberFormatter = (value) => new Intl.NumberFormat().format(value);
    return (
       <div>
-         <Radio.Group value={type} onChange={(e) => setType(e.target.value)}>
+        <div className='flex gap-10'>
+        <Radio.Group value={type} onChange={(e) => setType(e.target.value)}>
             <Radio.Button value="day">day</Radio.Button>
             <Radio.Button value="month">month</Radio.Button>
          </Radio.Group>
@@ -72,24 +82,25 @@ const RevenueChart = () => {
                }
             />
          }
+        </div>
          <div className='mx-auto w-fit font-semibold text-base uppercase py-3'>BIỂU ĐỒ DOANH THU</div>
          {data &&
-            <ResponsiveContainer width="80%" height={300} className={'mx-auto'}>
+            <ResponsiveContainer width="90%" height={300} className={'mx-auto my-10'}>
                <LineChart
-                  width={600}
+                  width={500}
                   height={200}
                   data={data}
                   margin={{
                      top: 10,
-                     right: 0,
-                     left: 0,
+                     right: 20,
+                     left: 20,
                      bottom: 0,
                   }}
                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="data" />
-                  <YAxis />
-                  <Tooltip />
+                  <YAxis tick={<CustomYAxisTick />} ></YAxis>
+                  <Tooltip formatter={numberFormatter} />
                   <Line connectNulls type="monotone" dataKey="sale" stroke="#8884d8" fill="#8884d8" />
                </LineChart>
             </ResponsiveContainer>

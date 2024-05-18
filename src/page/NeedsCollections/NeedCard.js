@@ -67,6 +67,12 @@ const NeedCard = (props) => {
         setVisible(false);
     };
     const onFinish = (values) => {
+        if(values.Name===value.NeedName){
+            toast.warning('Không có sự thay đổi', {
+                autoClose: 1000,
+            });
+            return 0
+        }
         const req = { NeedName: values.Name };
         const handleUpdateNeed = async () => {
             try {
@@ -79,13 +85,7 @@ const NeedCard = (props) => {
                     console.log("Đã cập nhật nhu cầu thành công");
                     fetchAPINeed();
                     toast.success("Đã cập nhật nhu cầu thành công", {
-                        position: "top-right",
                         autoClose: 1000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
                     });
                 } else {
                     console.error(

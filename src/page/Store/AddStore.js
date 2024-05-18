@@ -61,6 +61,8 @@ const AddStore = () => {
          if (res.succes === true) {
             toast.success('Tạo nhập thành công')
             onReset()
+            handleCancelVariant()
+            handleCancelSearch()
          }
          else toast.error("Tạo nhập kho thất bại")
 
@@ -135,15 +137,15 @@ const AddStore = () => {
    const onSearch = async (value, _e, info) => {
       if (!value.trim()) return 0
       try {
-         const req = await fetch(`http://localhost:8080/api/admin/search/user?search=${value.trim()}`)
+         const req = await fetch(`http://localhost:8080/api/admin/search/product?search=${value.trim()}`)
          const res = await req.json()
-         // if (res.succes) {
-         // setData(res.product)
-         console.log('res', res)
-         setProduct(res.user)
-         // } else {
-         //    console.error('ProductDetail: failed')
-         // }
+         if (res.succes) {
+            // setData(res.product)
+            console.log('res', res)
+            setProduct(res.product)
+         } else {
+            console.error('ProductDetail: failed')
+         }
       } catch {
          console.error('Promise productdetail rejected')
       }
@@ -164,13 +166,19 @@ const AddStore = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
          >
-            <Form.Item name="NameProvider" label="Tên nhà cung cấp" rules={[{ required: true, }]}>
+            <Form.Item name="NameProvider" label="Tên nhà cung cấp"
+            // rules={[{ required: true, }]}
+            >
                <Input />
             </Form.Item>
-            <Form.Item name="NumberPhone" label="Số điện thoại" rules={[{ required: true, }]}>
+            <Form.Item name="NumberPhone" label="Số điện thoại"
+            // rules={[{ required: true, }]}
+            >
                <InputNumber />
             </Form.Item>
-            <Form.Item name="Address" label="Địa chỉ" rules={[{ required: true, }]}>
+            <Form.Item name="Address" label="Địa chỉ"
+            //  rules={[{ required: true, }]}
+            >
                <Input />
             </Form.Item>
 
@@ -187,37 +195,24 @@ const AddStore = () => {
                   </tr>
                </thead>
                <tbody>
-                  {addStore.length > 0 && addStore.map((item, index) => {
-                     console.log("length", item.variants.length)
-                     return (
-                        <>
-                           <tr className='text-black bg-white' key={index}>
-                              <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{index + 1}</td>
-                              <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{item.ProductId}</td>
-                              <td className='align-top p-2 border' rowSpan={item.variants.length}>{item.Name}</td>
-                              <td className='p-2 text-center border'>{item.variants[0].color}</td>
-                              <td className='p-2 text-center border'>{item.variants[0].size}</td>
-                              <td className='p-2 text-center border'>{item.variants[0].quantity}</td>
-                              <td className='p-2 text-center border'>{item.variants[0].price}.000VND</td>
+                  {addStore.length > 0 && addStore.map((item, index) =>  (
+                     item.variants.map((variant, i) =>(
+                           <tr className='text-black bg-white' key={index-i}>
+                              {i === 0 && (
+                                 <>
+                                    <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{index + 1}</td>
+                                    <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{item.ProductId}</td>
+                                    <td className='align-top p-2 border' rowSpan={item.variants.length}>{item.Name}</td>
+                                 </>
+                              )}
+
+                                 <td className='p-2 text-center border'>{variant.color}</td>
+                                 <td className='p-2 text-center border'>{variant.size}</td>
+                                 <td className='p-2 text-center border'>{variant.quantity}</td>
+                                 <td className='p-2 text-center border'>{variant.price}.000VND</td>
                            </tr>
-                           {item.variants.length > 1 && (
-                              <>
-                                 {item.variants.map((variant, i) => {
-                                    if (i === 0) return null;
-                                    return (
-                                       <tr className='text-black bg-white' key={variant-i}>
-                                          <td className='p-2 text-center border'>{variant.color}</td>
-                                          <td className='p-2 text-center border'>{variant.size}</td>
-                                          <td className='p-2 text-center border'>{variant.quantity}</td>
-                                          <td className='p-2 text-center border'>{variant.price}.000VND</td>
-                                       </tr>
-                                    )
-                                 })}
-                              </>
-                           )}
-                        </>
-                     );
-                  })}
+                        ))
+                  ))}
                   <tr className='bg-white'>
                      <td colSpan={7} className='p-0'>
                         <div onClick={() => showModalSearchProduct()} className='border hover:border-blue-500 hover:text-blue-500 w-full p-1 text-center cursor-pointer'>
@@ -249,10 +244,10 @@ const AddStore = () => {
                      return (
                         <div
                            key={index}
-                           onClick={() => selectProduct(item.id, item.UserName)}
+                           onClick={() => selectProduct(item.id, item.NameProducts)}
                            className='bg-slate-100 py-1 px-3 m-1 rounded-md hover:border hover:font-semibold cursor-pointer'
                         >
-                           {item.UserName}
+                           {item.NameProducts}
                         </div>
                      );
                   })}
@@ -295,7 +290,7 @@ const AddStore = () => {
                   name="quantity"
                   rules={[{ required: true }]}
                >
-                  <InputNumber />
+                  <InputNumber min={1} />
                </Form.Item>
                <Form.Item
                   label="Giá"

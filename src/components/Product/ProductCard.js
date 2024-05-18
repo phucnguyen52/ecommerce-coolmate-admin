@@ -154,9 +154,12 @@ const ProductCard = (props) => {
          Discount: values.Discount,
          NeedID: values.NeedID,
          Price: values.Price,
-         NameProducts: values.NameProducts,
          Image: imageUrl
       }
+      
+      if(values.NameProducts!==value.NameProducts){
+         product.NameProducts=values.NameProducts
+     }
       try {
          const req = await fetch(`http://localhost:8080/api/products/${value.id}`, {
            method: 'PUT',
@@ -178,6 +181,7 @@ const ProductCard = (props) => {
                draggable: true,
                progress: undefined,
             })
+            fetchProduct()
             console.log(true)
          } else  toast.warning('Tên sản phẩm đã tồn tại', {
             position: "top-right",
@@ -294,7 +298,7 @@ const ProductCard = (props) => {
                   {...layout}
                   name="update-product"
                   initialValues={data && {
-                     CategorySubId: data.CategorySub,
+                     CategorySubId: data.CategorySubId,
                      CollectionID: data.Collections.map(item => item.id),
                      DescriptionProducts: data.DescriptionProducts.replace(/\\\\/g, '\n'),
                      Discount: data.Discount,
