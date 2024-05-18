@@ -8,7 +8,7 @@ const ListProduct = () => {
 
    const fetProduct = async () => {
       try {
-         const req = await fetch(`http://localhost:8080/api/products?min=0&max=1000000&page=${page}`)
+         const req = await fetch(`http://localhost:8080/api/products?min=0&max=1000000&page=${page}&type=ASC&sort=new`)
          const res = await req.json();
          if (res.succes) {
             console.log(res);

@@ -69,19 +69,10 @@ function MainLayout() {
             ),
         ]),
         getItem("Đơn hàng", "sub3", <ShoppingCartOutlined />, [
-            getItem(
-                <Link to={'/order/1'}>Đang chờ xác nhận</Link>,
-                "8"
-            ),
-            getItem(
-                <Link to={'/order/2'}>Đang vận chuyển</Link>,
-                "9"
-            ),
-            getItem(
-                <Link to={'/order/3'}>Đang giao hàng</Link>,
-                "10"
-            ),
-            getItem(<Link to={'/order/4'}>Đã giao</Link>, "11"),
+            getItem(<Link to={"/order_wait"}>Đang chờ xác nhận</Link>, "8"),
+            getItem(<Link to={"/order_trans"}>Đang vận chuyển</Link>, "9"),
+            getItem(<Link to={"/order_delivering"}>Đang giao hàng</Link>, "10"),
+            getItem(<Link to={"/order_delivered"}>Đã giao</Link>, "11"),
         ]),
         getItem(
             <Link to={APP_ROUTER.LISTUSER}>Người dùng</Link>,

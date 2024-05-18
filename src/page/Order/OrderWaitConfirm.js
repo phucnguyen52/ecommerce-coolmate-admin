@@ -9,7 +9,7 @@ const OrderWaitConfirm = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:8080/api/admin/order/1"
+                    "http://localhost:8080/api/admin/order/pending"
                 );
 
                 setOrders(response.data.order);
@@ -29,7 +29,22 @@ const OrderWaitConfirm = () => {
         acc[order.orderId].push(order);
         return acc;
     }, {});
-
+    const handleSubmit = async (orderId) => {
+        console.log("handleSubmit", orderId);
+        // const req = {
+        //     StatusOrderId: 2,
+        // };
+        // console.log("req", req);
+        // try {
+        //     await axios.put("http://localhost:8080/api/users/me", req, {
+        //         withCredentials: true,
+        //     });
+        //     toast.success("Cập nhật thông tin thành công");
+        // } catch (error) {
+        //     console.error("Error updating user information:", error);
+        //     toast.error("Đã xảy ra lỗi khi cập nhật thông tin");
+        // }
+    };
     return (
         <div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -59,6 +74,9 @@ const OrderWaitConfirm = () => {
                         <th scope="col" className="px-6 py-3">
                             Size
                         </th>
+                        <th scope="col" className="px-6 py-3">
+                            Click
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,10 +84,10 @@ const OrderWaitConfirm = () => {
                         <React.Fragment key={orderId}>
                             <tr>
                                 <th
-                                    colSpan="8"
+                                    colSpan="9"
                                     className="px-6 bg-gray-200 dark:bg-gray-700 dark:text-white"
                                 >
-                                     <hr className="mb-3 flex" />
+                                    <hr className="mb-3 flex" />
                                 </th>
                             </tr>
                             {groupedOrders[orderId].map((order, index) => (
@@ -97,6 +115,18 @@ const OrderWaitConfirm = () => {
                                         {order.quantity}
                                     </td>
                                     <td className="px-6 py-4">{order.size}</td>
+                                    <td className="px-6 py-4">
+                                        <button
+                                            className="p-2 bg-slate-400 rounded text-black"
+                                            onClick={() =>
+                                                handleSubmit(
+                                                    groupedOrders.orderID
+                                                )
+                                            }
+                                        >
+                                            Chuyển trạng thái
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </React.Fragment>
