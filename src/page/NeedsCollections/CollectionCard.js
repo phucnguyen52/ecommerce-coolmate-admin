@@ -71,6 +71,12 @@ const CollectionCard = (props) => {
     };
 
     const onFinish = (values) => {
+        if(values.Name===value.Name){
+            toast.warning('Không có sự thay đổi', {
+                autoClose: 1000,
+            });
+            return 0
+        }
         const req = { Name: values.Name };
         const handleUpdateCollection = async () => {
             await axios.put(

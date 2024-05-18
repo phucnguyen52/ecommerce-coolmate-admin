@@ -165,65 +165,64 @@ const ProductCard = (props) => {
         });
     };
 
-    const showModal = () => {
-        setVisible(true);
-    };
-    const handleCancel = () => {
-        setVisible(false);
-    };
-    const onFinish = async (values) => {
-        const product = {
-            CategorySubId: values.CategorySubId,
-            CollectionID: values.CollectionID,
-            DescriptionProducts:
-                values.DescriptionProducts.split("\n").join("\u005C\u005C"),
-            Discount: values.Discount,
-            NeedID: values.NeedID,
-            Price: values.Price,
-            NameProducts: values.NameProducts,
-            Image: imageUrl,
-        };
-        try {
-            const req = await fetch(
-                `http://localhost:8080/api/products/${value.id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        // Thêm các headers khác nếu cần
-                    },
-                    body: JSON.stringify(product),
-                }
-            );
-            const res = await req.json();
-            if (res.succes) {
-                handleCancel();
-                toast.success(res.message, {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-                console.log(true);
-            } else
-                toast.warning("Tên sản phẩm đã tồn tại", {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-        } catch (error) {
-            console.error("Lỗi put product", error);
-        }
-        // console.log('Received values:', product, values);
-        // setVisible(false); // Ẩn modal sau khi submit thành công
-    };
+   const showModal = () => {
+      setVisible(true);
+   };
+   const handleCancel = () => {
+      setVisible(false);
+   };
+   const onFinish = async(values) => {
+      const product = {
+         CategorySubId: values.CategorySubId,
+         CollectionID: values.CollectionID,
+         DescriptionProducts: values.DescriptionProducts.split('\n').join('\u005C\u005C'),
+         Discount: values.Discount,
+         NeedID: values.NeedID,
+         Price: values.Price,
+         Image: imageUrl
+      }
+      
+      if(values.NameProducts!==value.NameProducts){
+         product.NameProducts=values.NameProducts
+     }
+      try {
+         const req = await fetch(`http://localhost:8080/api/products/${value.id}`, {
+           method: 'PUT',
+           headers: {
+             'Content-Type': 'application/json',
+             // Thêm các headers khác nếu cần
+           },
+           body: JSON.stringify(product),
+         });
+         const res = await req.json();
+         if (res.succes) {
+            handleCancel();
+            toast.success(res.message, {
+               position: "top-right",
+               autoClose: 1000,
+               hideProgressBar: true,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+            })
+            fetchProduct()
+            console.log(true)
+         } else  toast.warning('Tên sản phẩm đã tồn tại', {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+         })
+       } catch (error) {
+         console.error('Lỗi put product', error);
+       }
+      // console.log('Received values:', product, values);
+      // setVisible(false); // Ẩn modal sau khi submit thành công
+   };
 
     const DeleteImg = (img) => {
         const image = imageUrl.filter((item) => item !== img);
@@ -272,111 +271,78 @@ const ProductCard = (props) => {
                         </Link>
                     </div>
 
-                    <Link to={`/product/${value.id}`}>
-                        <div className=" text-md p-2">{value.NameProducts}</div>
-                    </Link>
-                </div>
-                <div className="p-1">
-                    {value.Discount ? (
-                        <div className="flex text-sm">
-                            <div className="font-semibold text-[#242424]">
-                                {(
-                                    (value.Price * (100 - value.Discount)) /
-                                    100
-                                ).toFixed()}
-                                .000đ
-                            </div>
-                            <del className=" text-gray-400 px-3">
-                                {value.Price}.000đ
-                            </del>
-                            <div className="text-red-500">
-                                {value.Discount}%
-                            </div>
+               <Link to={`/product/${value.id}`}>
+                  <div className=" text-md p-2">{value.NameProducts}</div>
+               </Link>
+
+            </div>
+            <div className='p-1'>
+               {value.Discount ?
+                  <div className="flex text-sm">
+                     <div className="font-semibold text-[#242424]">{(value.Price * (100 - value.Discount) / 100).toFixed()}.000đ</div>
+                     <del className=" text-gray-400 px-3">{value.Price}.000đ</del>
+                     <div className="text-red-500">{value.Discount}%</div>
+                  </div>
+                  :
+                  <div className="font-semibold">{(value.Price * (100 - value.Discount) / 100).toFixed()}.000đ</div>
+               }
+               {rating &&
+                  <>
+                     {rating.count ?
+                        <div className='flex '>
+                           <div>{rating.point}</div>
+                           <StarFilled className='text-yellow-500 ml-1 mr-3' />
+                           <div>({rating.count})</div>
                         </div>
-                    ) : (
-                        <div className="font-semibold">
-                            {(
-                                (value.Price * (100 - value.Discount)) /
-                                100
-                            ).toFixed()}
-                            .000đ
-                        </div>
-                    )}
-                    {rating && (
-                        <>
-                            {rating.count ? (
-                                <div className="flex ">
-                                    <div>{rating.point}</div>
-                                    <StarFilled className="text-yellow-500 ml-1 mr-3" />
-                                    <div>({rating.count})</div>
-                                </div>
-                            ) : (
-                                <div className="italic mr-5">
-                                    Chưa có đánh giá
-                                </div>
-                            )}
-                        </>
-                    )}
-                    <div className="flex justify-evenly mt-3 mb-1">
-                        <button
-                            className="py-1 px-2 border rounded-md hover:border-slate-500"
-                            onClick={() => showModal()}
-                        >
-                            <EditOutlined /> Sửa
-                        </button>
-                        <button
-                            onClick={() => handleDelete(value.id)}
-                            className="py-1 px-2 border rounded-md hover:border-red-600 text-red-500"
-                        >
-                            <DeleteOutlined /> Xoá
-                        </button>
-                    </div>
-                </div>
-                <Modal
-                    title={
-                        <div className="text-2xl font-semibold mb-8">
-                            CẬP NHẬT SẢN PHẨM
-                        </div>
-                    }
-                    open={visible}
-                    style={{ top: 50 }}
-                    onCancel={handleCancel}
-                    footer={null} // Không hiển thị footer mặc định của modal
-                    width={1000}
-                >
-                    <Form
-                        labelAlign="left"
-                        form={form}
-                        {...layout}
-                        name="update-product"
-                        initialValues={
-                            data && {
-                                CategorySubId: data.CategorySubId,
-                                CollectionID: data.Collections.map(
-                                    (item) => item.id
-                                ),
-                                DescriptionProducts:
-                                    data.DescriptionProducts.replace(
-                                        /\\\\/g,
-                                        "\n"
-                                    ),
-                                Discount: data.Discount,
-                                NeedID: data.Needs.map((item) => item.id),
-                                Price: data.Price,
-                                NameProducts: data.NameProducts,
-                                // Image: imageUrl
-                            }
-                        }
-                        onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
-                    >
-                        <Form.Item
-                            name="NameProducts"
-                            label="Tên sản phẩm"
-                            rules={[{ required: true }]}
-                        >
-                            <Input />
-                        </Form.Item>
+                        :
+                        <div className="italic mr-5">Chưa có đánh giá</div>
+                     }
+                  </>
+               }
+               <div className='flex justify-evenly mt-3 mb-1'>
+                  <button
+                     className='py-1 px-2 border rounded-md hover:border-slate-500'
+                     onClick={() => showModal()}
+                  >
+                     <EditOutlined />  Sửa
+                  </button>
+                  <button
+                     onClick={() => handleDelete(value.id)}
+                     className='py-1 px-2 border rounded-md hover:border-red-600 text-red-500'
+                  >
+                     <DeleteOutlined /> Xoá
+                  </button>
+               </div>
+            </div>
+            <Modal
+               title={<div className="text-2xl font-semibold mb-8">CẬP NHẬT SẢN PHẨM</div>}
+               open={visible}
+               style={{ top: 50 }}
+               onCancel={handleCancel}
+               footer={null} // Không hiển thị footer mặc định của modal
+               width={1000}
+            >
+               <Form
+                  labelAlign="left"
+                  form={form}
+                  {...layout}
+                  name="update-product"
+                  initialValues={data && {
+                     CategorySubId: data.CategorySubId,
+                     CollectionID: data.Collections.map(item => item.id),
+                     DescriptionProducts: data.DescriptionProducts.replace(/\\\\/g, '\n'),
+                     Discount: data.Discount,
+                     NeedID: data.Needs.map(item => item.id),
+                     Price: data.Price,
+                     NameProducts: data.NameProducts,
+                     // Image: imageUrl
+                  }}
+                  onFinish={onFinish}
+                  onFinishFailed={onFinishFailed}
+               >
+                  <Form.Item name="NameProducts" label="Tên sản phẩm" rules={[{ required: true, }]}>
+                     <Input />
+                  </Form.Item>
 
                         <Form.Item
                             name="DescriptionProducts"

@@ -71,22 +71,21 @@ const CategoryCard = (props) => {
     };
 
     const onFinish = (values) => {
+        if(values.Name===value.Name){
+            toast.warning('Không có sự thay đổi', {
+                autoClose: 1000,
+            });
+            return 0
+        }
         const req = { Name: values.Name };
         const handleUpdateCategory = async () => {
             await axios.put(
                 `http://localhost:8080/api/category/${value.id}`,
                 req
             );
-            console.log("Đã cập nhật danh mục thành công");
             fetchAPICategory();
             toast.success("Đã cập nhật danh mục thành công", {
-                position: "top-right",
                 autoClose: 1000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
             });
         };
         handleUpdateCategory();

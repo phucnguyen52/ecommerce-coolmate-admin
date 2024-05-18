@@ -62,11 +62,10 @@ const ProductReviews = (props) => {
                                  </div>
                                  <StarRating className="text-lg" css="text-blue-700 w-4 h-4" rating={item.startPoint} />
                                  <div className="italic text-gray-400 text-xs">
-                                    {/* {item.VariantsProduct.map((product, index) => (
-                                       <>{index > 0 ? ', ' : ''}{product.Color}/ {product.Size}</>
-                                    ))} */}
+                                    {item.Color}/ {item.Size}
                                  </div>
                                  <div className="my-4">{item.comment}</div>
+                                 <img src={item.Picture} alt="" className="h-10 w-10 object-cover" />
                                  <div className="text-gray-400 italic text-xs">{formatDate(item.dateRating)}</div>
                               </div>
                            ))}

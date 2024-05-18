@@ -92,11 +92,14 @@ const CategorySubCard = (props) => {
     };
     const onFinish = (values) => {
         const req = {
-            Name: values.Name,
             Image: imageUrl,
             CategoryId: values.CategoryId,
         };
-        console.log("1111", req);
+        
+        if (values.Name !== value.Name) {
+            req.Name = values.Name;
+            console.log("test", values.Name,value.Name);
+        }
         const handleUpdateCategorySub = async () => {
             try {
                 const response = await axios.put(
