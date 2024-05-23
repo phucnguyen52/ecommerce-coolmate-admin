@@ -30,7 +30,7 @@ const CategorySubCard = (props) => {
     const fetchCategory = async () => {
         try {
             const req = await fetch(`http://localhost:8080/api/category`);
-            const res = await req.json();
+            const res = await req.data;
             if (res.succes) {
                 setCategory(res.category);
             } else {
@@ -97,7 +97,7 @@ const CategorySubCard = (props) => {
             Image: imageUrl,
             CategoryId: values.CategoryId,
         };
-        
+
         if (values.Name !== value.Name) {
             data.Name =charUpperCase(values.Name);
             // console.log("test", values.Name,value.Name);

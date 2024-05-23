@@ -5,7 +5,6 @@ function AuthLayout() {
     return (
         <div>
             <main>
-                Auth
                 <Outlet />
             </main>
         </div>

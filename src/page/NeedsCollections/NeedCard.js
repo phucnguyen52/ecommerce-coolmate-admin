@@ -16,7 +16,7 @@ const NeedCard = (props) => {
     const handleDelete = (id) => {
         console.log(id);
         confirm({
-            title: "Bạn có chắc chắn xoá loại sản phẩm này?",
+            title: "Bạn có chắc chắn xoá nhu cầu này?",
             icon: <ExclamationCircleFilled />,
             //   content: 'Some descriptions',
             okText: "Yes",

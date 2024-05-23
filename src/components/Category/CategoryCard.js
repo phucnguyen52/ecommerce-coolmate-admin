@@ -81,7 +81,7 @@ const CategoryCard = (props) => {
             toast.warning('Không có sự thay đổi', {
                 autoClose: 1000,
             });
-            return 0
+            return 0;
         }
         const data = { Name: charUpperCase(values.Name) };
         const handleUpdate = async (category) => {
