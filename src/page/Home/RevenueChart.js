@@ -38,62 +38,69 @@ const RevenueChart = () => {
 
    const CustomYAxisTick = ({ x, y, payload }) => {
       return (
-        <text x={x} y={y} textAnchor="end" fill="#666" dy={4}>
-          {new Intl.NumberFormat().format(payload.value)}
-        </text>
+         <text x={x} y={y} textAnchor="end" fill="#666" dy={4}>
+            {new Intl.NumberFormat().format(payload.value)}
+         </text>
       );
-    };
-    const numberFormatter = (value) => new Intl.NumberFormat().format(value);
+   };
+   const numberFormatter = (value) => new Intl.NumberFormat().format(value);
    return (
-      <div>
-        <div className='flex gap-10'>
-        <Radio.Group value={type} onChange={(e) => setType(e.target.value)}>
-            <Radio.Button value="day">day</Radio.Button>
-            <Radio.Button value="month">month</Radio.Button>
-         </Radio.Group>
+      <div className='my-10 bg-white'>
+         <div className='flex gap-5 justify-between mx-10 mb-5'>
+            <div>
+               <div className='text-slate-500 font-semibold mb-2'>Loại biểu đồ</div>
+               <Radio.Group value={type} onChange={(e) => setType(e.target.value)}>
+               <Radio.Button value="day">Tháng</Radio.Button>
+               <Radio.Button value="month">Năm</Radio.Button>
+            </Radio.Group>
+            </div>
+            
+            <div>
+               <div className='text-slate-500 font-semibold mb-2'>Thời gian</div>
+               {type === 'day' &&
+               <Select
+                  defaultValue={`${new Date().getMonth() + 1}`}
+                  style={{
+                     width: 100,
+                  }}
+                  onChange={handleChange}
+                  options={
+                     Array.from({ length: new Date().getMonth() + 1 }, (_, i) => ({
+                        value: `${i + 1}`,
+                        label: `Tháng ${i + 1}`,
+                     }))
+                  }
+               />
+            }
+            {type === 'month' &&
+               <Select
+                  defaultValue={`${new Date().getFullYear()}`}
+                  style={{
+                     width: 120,
+                  }}
+                  onChange={handleChange}
+                  options={
+                     Array.from({ length: new Date().getFullYear() - 2022 + 1 }, (_, i) => ({
+                        value: `${i + 2022}`,
+                        label: `${i + 2022}`,
+                     }))
+                  }
+               />
+            }
+            </div>
+           
+         </div>
 
-         {type === 'day' &&
-            <Select
-               defaultValue={`${new Date().getMonth() + 1}`}
-               style={{
-                  width: 120,
-               }}
-               onChange={handleChange}
-               options={
-                  Array.from({ length: new Date().getMonth() + 1 }, (_, i) => ({
-                     value: `${i + 1}`,
-                     label: `Tháng ${i + 1}`,
-                  }))
-               }
-            />
-         }
-         {type === 'month' &&
-            <Select
-               defaultValue={`${new Date().getFullYear()}`}
-               style={{
-                  width: 120,
-               }}
-               onChange={handleChange}
-               options={
-                  Array.from({ length: new Date().getFullYear() - 2022 + 1 }, (_, i) => ({
-                     value: `${i + 2022}`,
-                     label: `${i + 2022}`,
-                  }))
-               }
-            />
-         }
-        </div>
-         <div className='mx-auto w-fit font-semibold text-base uppercase py-3'>BIỂU ĐỒ DOANH THU</div>
          {data &&
-            <ResponsiveContainer width="90%" height={300} className={'mx-auto my-10'}>
+            <ResponsiveContainer width="100%" height={300}>
                <LineChart
                   width={500}
                   height={200}
                   data={data}
                   margin={{
                      top: 10,
-                     right: 20,
-                     left: 20,
+                     right: 30,
+                     left: 50,
                      bottom: 0,
                   }}
                >
@@ -105,7 +112,7 @@ const RevenueChart = () => {
                </LineChart>
             </ResponsiveContainer>
          }
-
+         <div className='mx-auto w-fit font-semibold text-base uppercase py-5'>BIỂU ĐỒ DOANH THU</div>
 
       </div>
    );

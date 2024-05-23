@@ -11,7 +11,15 @@ const { confirm } = Modal;
 const { useForm } = Form;
 const CollectionCard = (props) => {
     const { value, fetchAPICollection } = props;
-    // console.log(value)
+    const [form] = useForm();
+    const [visible, setVisible] = useState(false);
+
+    const showModal = () => {
+        setVisible(true);
+    }
+    const handleCancel = () => {
+        setVisible(false);
+    }
     const handleDelete = (id) => {
         confirm({
             title: "Bạn có chắc chắn xoá bộ sưu tập này?",
@@ -58,17 +66,7 @@ const CollectionCard = (props) => {
         });
     };
 
-    const [form] = useForm();
-
-    const [visible, setVisible] = useState(false);
-
-    const showModal = () => {
-        setVisible(true);
-    };
-
-    const handleCancel = () => {
-        setVisible(false);
-    };
+    
 
     const onFinish = (values) => {
         if(values.Name===value.Name){
@@ -77,7 +75,7 @@ const CollectionCard = (props) => {
             });
             return 0
         }
-        const req = { Name: values.Name };
+        const req = { Name: charUpperCase(values.Name) };
         const handleUpdateCollection = async () => {
             await axios.put(
                 `http://localhost:8080/api/collection/${value.id}`,
@@ -85,6 +83,7 @@ const CollectionCard = (props) => {
             );
 
             console.log("Đã cập nhật bộ sưu tập thành công");
+            await new Promise(resolve => setTimeout(resolve, 500));
             fetchAPICollection();
             toast.success("Đã cập nhật bộ sưu tập thành công", {
                 position: "top-right",
@@ -100,6 +99,14 @@ const CollectionCard = (props) => {
 
         setVisible(false);
     };
+
+    const charUpperCase = (sentence) => {
+        sentence = sentence.toLowerCase();
+        let words = sentence.split(' ');
+        let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        let capitalizedSentence = capitalizedWords.join(' ');
+        return capitalizedSentence;
+    }
     return (
         <>
             <div className="border rounded-2xl p-2 text-center flex flex-col justify-between">

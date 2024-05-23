@@ -39,20 +39,21 @@ const AddProduct = () => {
    }, [])
    // console.log("CategorySubId", category)
 
+   const charUpperCase = (sentence) => {
+      sentence = sentence.toLowerCase();
+      let words = sentence.split(' ');
+      let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+      let capitalizedSentence = capitalizedWords.join(' ');
+      return capitalizedSentence;
+  }
    const onFinish = async (values) => {
-      if (!imageUrl.length) {
-         toast.warning("Vui lòng chọn ảnh", {
-            position: "top-right",
+      if (!imageUrl.length||imageUrl.length < 2) {
+         toast.warning("Vui lòng chọn tối thiểu 2 ảnh", {
             autoClose: 1000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
          });
          console.log(imageUrl)
          return 0;
-      }
+      } 
       const product = {
          CategorySubId: values.CategorySubId,
          CollectionID: values.CollectionID,
@@ -60,8 +61,8 @@ const AddProduct = () => {
          Discount: values.Discount,
          NeedID: values.NeedID,
          Price: values.Price,
-         NameProducts: values.NameProducts,
-         Image: JSON.stringify(imageUrl)
+         NameProducts: charUpperCase(values.NameProducts),
+         Image: imageUrl
       }
       console.log("product", product);
 
@@ -123,6 +124,7 @@ const AddProduct = () => {
       // Ngăn chặn quá trình tải lên mặc định của Upload
       return false;
    };
+
    return (
       <>
          <div className='font-bold text-3xl mx-auto p-10 text-center'>THÊM SẢN PHẨM MỚI</div>

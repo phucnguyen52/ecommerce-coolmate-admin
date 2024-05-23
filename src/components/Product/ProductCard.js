@@ -173,24 +173,13 @@ const ProductCard = (props) => {
          if (res.succes) {
             handleCancel();
             toast.success(res.message, {
-               position: "top-right",
                autoClose: 1000,
-               hideProgressBar: true,
-               closeOnClick: true,
-               pauseOnHover: true,
-               draggable: true,
-               progress: undefined,
             })
+            await new Promise(resolve => setTimeout(resolve, 500));
             fetchProduct()
             console.log(true)
-         } else  toast.warning('Tên sản phẩm đã tồn tại', {
-            position: "top-right",
+         } else  toast.warning(res.message, {
             autoClose: 1000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
          })
        } catch (error) {
          console.error('Lỗi put product', error);

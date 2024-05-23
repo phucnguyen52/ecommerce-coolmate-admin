@@ -53,7 +53,7 @@ const ProductDetail = () => {
     }, [])
 
     const checkSize = (variant) => {
-        const check = (variant.filter(item => item.size !== '')).length
+        const check = (variant.filter(item => item.size.trim() !== '')).length
         return check ? true : false
     }
 

@@ -9,9 +9,20 @@ import { toast } from "react-toastify";
 import axios from "axios";
 const { confirm } = Modal;
 const { useForm } = Form;
+
 const CategoryCard = (props) => {
     const { value, fetchAPICategory } = props;
     // console.log(value)
+    const [form] = useForm();
+    const [visible, setVisible] = useState(false);
+
+    const showModal = () => {
+        setVisible(true);
+    };
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
     const handleDelete = (id) => {
         confirm({
             title: "Bạn có chắc chắn xoá loại sản phẩm này?",
@@ -58,39 +69,44 @@ const CategoryCard = (props) => {
         });
     };
 
-    const [form] = useForm();
-
-    const [visible, setVisible] = useState(false);
-
-    const showModal = () => {
-        setVisible(true);
-    };
-
-    const handleCancel = () => {
-        setVisible(false);
-    };
-
+    const charUpperCase = (sentence) => {
+        sentence = sentence.toLowerCase();
+        let words = sentence.split(' ');
+        let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        let capitalizedSentence = capitalizedWords.join(' ');
+        return capitalizedSentence;
+    }
     const onFinish = (values) => {
-        if(values.Name===value.Name){
+        if (values.Name === value.Name) {
             toast.warning('Không có sự thay đổi', {
                 autoClose: 1000,
             });
             return 0
         }
-        const req = { Name: values.Name };
-        const handleUpdateCategory = async () => {
-            await axios.put(
-                `http://localhost:8080/api/category/${value.id}`,
-                req
-            );
-            fetchAPICategory();
-            toast.success("Đã cập nhật danh mục thành công", {
-                autoClose: 1000,
-            });
-        };
-        handleUpdateCategory();
-
-        setVisible(false); // Ẩn modal sau khi submit thành công
+        const data = { Name: charUpperCase(values.Name) };
+        const handleUpdate = async (category) => {
+            try {
+                const req = await fetch(`http://localhost:8080/api/category/${value.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(category),
+                });
+                const res = await req.json();
+                if (res.succes) {                   
+                    toast.success("Đã cập nhật danh mục thành công", {
+                        autoClose: 1000,
+                    });
+                    setVisible(false); // Ẩn modal sau khi submit thành công
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await fetchAPICategory();
+                }
+            } catch (error) {
+                console.log("Error update category", error)
+            }
+        }
+        handleUpdate(data)
     };
     return (
         <>
@@ -118,13 +134,13 @@ const CategoryCard = (props) => {
                                 CẬP NHẬT LOẠI SẢN PHẨM
                             </div>
                         }
-                        visible={visible}
+                        open={visible}
                         onCancel={handleCancel}
                         footer={null} // Không hiển thị footer mặc định của modal
                     >
                         <Form
                             form={form}
-                            name="myForm"
+                            name="update-category"
                             initialValues={{ Name: value.Name }}
                             onFinish={onFinish}
                         >

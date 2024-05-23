@@ -19,6 +19,14 @@ const CategorySubCard = (props) => {
     const [visible, setVisible] = useState(false);
     const [imageUrl, setImageUrl] = useState(value.Image);
     // console.log(value)
+
+    const showModal = () => {
+        setVisible(true);
+    };
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
     const fetchCategory = async () => {
         try {
             const req = await fetch(`http://localhost:8080/api/category`);
@@ -84,56 +92,38 @@ const CategorySubCard = (props) => {
         });
     };
 
-    const showModal = () => {
-        setVisible(true);
-    };
-    const handleCancel = () => {
-        setVisible(false);
-    };
     const onFinish = (values) => {
-        const req = {
+        const data = {
             Image: imageUrl,
             CategoryId: values.CategoryId,
         };
         
         if (values.Name !== value.Name) {
-            req.Name = values.Name;
-            console.log("test", values.Name,value.Name);
+            data.Name =charUpperCase(values.Name);
+            // console.log("test", values.Name,value.Name);
         }
         const handleUpdateCategorySub = async () => {
             try {
-                const response = await axios.put(
-                    `http://localhost:8080/api/categorysub/${value.id}`,
-                    req
-                );
-
-                if (response.data.succes) {
+                const req = await fetch(`http://localhost:8080/api/categorysub/${value.id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                       "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                 })
+                 const res = await req.json();
+                if (res.succes) {
                     console.log("Đã cập nhật chi tiết danh mục thành công");
-                    fetchAPICategorySub();
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await fetchAPICategorySub();
                     toast.success("Đã cập nhật chi tiết danh mục thành công", {
-                        position: "top-right",
                         autoClose: 1000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
                     });
                 } else {
-                    console.error(
-                        "Có lỗi xảy ra khi cập nhật chi tiết danh mục:",
-                        response.data.message
+                    toast.warning(
+                        toast.warning(res.message)
                     );
-                    // Xử lý thông báo lỗi
-                    toast.error(response.data.message, {
-                        position: "top-right",
-                        autoClose: 1000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                    });
                 }
             } catch (error) {
                 console.error(
@@ -142,13 +132,7 @@ const CategorySubCard = (props) => {
                 );
                 // Xử lý lỗi ở đây nếu cần
                 toast.error("Có lỗi xảy ra khi cập nhật chi tiết danh mục", {
-                    position: "top-right",
                     autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
                 });
             }
         };
@@ -180,7 +164,13 @@ const CategorySubCard = (props) => {
         // Ngăn chặn quá trình tải lên mặc định của Upload
         return false;
     };
-    console.log(imageUrl);
+    const charUpperCase = (sentence) => {
+        sentence = sentence.toLowerCase();
+        let words = sentence.split(' ');
+        let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        let capitalizedSentence = capitalizedWords.join(' ');
+        return capitalizedSentence;
+    }
     return (
         <>
             <div className="border rounded-2xl p-2 text-center flex flex-col justify-between">
@@ -222,7 +212,7 @@ const CategorySubCard = (props) => {
                                 Name: value.Name,
                                 CategoryId: value.CategoryId,
                             }}
-                            onFinish={onFinish}
+                            onFinish={(e) => onFinish(e)}
                         >
                             <Form.Item
                                 label="Tên chi tiết loại sản phẩm mới"

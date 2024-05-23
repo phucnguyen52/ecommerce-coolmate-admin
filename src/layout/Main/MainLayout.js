@@ -30,7 +30,7 @@ function MainLayout() {
     } = theme.useToken();
     const items = [
         getItem(
-            <Link to={APP_ROUTER.HOME}>Home</Link>,
+            <Link to={APP_ROUTER.HOME}>Trang chủ</Link>,
             "1",
             <PieChartOutlined />
         ),

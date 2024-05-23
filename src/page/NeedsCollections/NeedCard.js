@@ -9,6 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 const { confirm } = Modal;
 const { useForm } = Form;
+
 const NeedCard = (props) => {
     const { value, fetchAPINeed } = props;
     // console.log(value)
@@ -33,6 +34,7 @@ const NeedCard = (props) => {
                         );
                         if (response.status === 200) {
                             console.log("Xóa nhu cầu thành công.");
+                            await new Promise(resolve => setTimeout(resolve, 500));
                             fetchAPINeed();
                             toast.success("Đã xóa nhu cầu thành công", {
                                 position: "top-right",
@@ -66,6 +68,13 @@ const NeedCard = (props) => {
     const handleCancel = () => {
         setVisible(false);
     };
+    const charUpperCase = (sentence) => {
+        sentence = sentence.toLowerCase();
+        let words = sentence.split(' ');
+        let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        let capitalizedSentence = capitalizedWords.join(' ');
+        return capitalizedSentence;
+    }
     const onFinish = (values) => {
         if(values.Name===value.NeedName){
             toast.warning('Không có sự thay đổi', {
@@ -73,7 +82,7 @@ const NeedCard = (props) => {
             });
             return 0
         }
-        const req = { NeedName: values.Name };
+        const req = { NeedName: charUpperCase(values.Name) };
         const handleUpdateNeed = async () => {
             try {
                 const response = await axios.put(

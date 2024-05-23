@@ -7,7 +7,7 @@ function HomePage() {
     return (
         <div className='bg-gray-100'>
             <RevenueChart />
-            <div className="flex gap-3">
+            <div className="flex justify-between">
                 <SaleProduct />
                 <CustomerVIP />
             </div>

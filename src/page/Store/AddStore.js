@@ -1,9 +1,11 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DeleteOutlined, EditOutlined, StarFilled, ExclamationCircleFilled, UploadOutlined, CloseOutlined } from '@ant-design/icons';
 import { Modal, Form, Button, UploadButton, Checkbox, Col, Input, InputNumber, Row, Select, Upload, Divider } from 'antd';
 import { toast } from 'react-toastify';
+import Cookies from 'js-cookie'
+import { APP_ROUTER } from '../../utils/Constants'
 import '../index.css'
 const { Search } = Input;
 const { useForm } = Form;
@@ -20,7 +22,9 @@ const layout = {
 const tailLayout = {
    wrapperCol: { offset: 4, span: 16 },
 };
+
 const AddStore = () => {
+   const nagative = useNavigate();
    const [form] = Form.useForm();
    const [formVariant] = Form.useForm();
    const [product, setProduct] = useState()
@@ -38,6 +42,12 @@ const AddStore = () => {
       setAddStore([])
    };
    const onFinish = async (values) => {
+      const userDataString = Cookies.get('token');
+        if (!userDataString) {
+            toast.warning("Vui lòng đăng nhập")
+            nagative(APP_ROUTER.LOGIN)
+            return 0;
+        }
       console.log('Received values:', values);
       console.log("post", addStore)
       const data = addStore.map(item => ({
@@ -283,6 +293,7 @@ const AddStore = () => {
                         // console.log(item)
                         return (<Option key={item} value={item}>{item}</Option>);
                      })}
+                     <Option value=' '>Không có</Option>
                   </Select>
                </Form.Item>
                <Form.Item

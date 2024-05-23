@@ -53,18 +53,16 @@ const Category = () => {
         } catch (error) {
             console.error("Có lỗi xảy ra khi fetch category:", error);
         }
-    
     };
 
     const fetchCategorySub = async () => {
         try {
             const req = await fetch(`http://localhost:8080/api/categorysub`);
             const res = await req.json();
-            console.log(res);
             if (res.succes) {
                 setCategorySub(res.data);
             } else {
-                console.error("Không thể lấy dữ liệu category sub:", res.error);
+                console.error("Không thể lấy dữ liệu category sub:", res.message);
             }
         } catch (error) {
             console.error("Có lỗi xảy ra khi fetch category sub:", error);
@@ -106,13 +104,11 @@ const Category = () => {
     };
 
     const onFinish = async (values) => {
-        console.log(values);
         const valueCategorySub = {
             ...values,
-            Name: values.Name.trim(),
+            Name: charUpperCase(values.Name.trim()),
             Image: imageUrl,
         };
-        console.log("valueCategorySub", valueCategorySub);
         try {
             const req = await fetch(`http://localhost:8080/api/categorysub`, {
                 method: "POST",
@@ -122,7 +118,6 @@ const Category = () => {
                 body: JSON.stringify(valueCategorySub),
             });
             const res = await req.json();
-            console.log(res);
             if (res.succes) {
                 toast.success(res.message);
                 fetchCategorySub();
@@ -140,14 +135,16 @@ const Category = () => {
         setModal(false);
     };
     const addCategory = async (value) => {
-        console.log("Name", value);
+        const category = {
+            Name: charUpperCase(value.Name)
+        }
         try {
             const req = await fetch(`http://localhost:8080/api/category`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(value),
+                body: JSON.stringify(category),
             });
             const res = await req.json();
             if (res.succes === true) {
@@ -155,12 +152,20 @@ const Category = () => {
                 fetchCategory();
                 onReset();
                 handleCancel(setModalAddCategory);
-            } else toast.error(res.message);
+            } else toast.error("Đã tồn tại");
         } catch (error) {
             console.error("Error adding category:", error.message);
             throw error;
         }
     };
+
+    const charUpperCase = (sentence) => {
+        sentence = sentence.toLowerCase();
+        let words = sentence.split(' ');
+        let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        let capitalizedSentence = capitalizedWords.join(' ');
+        return capitalizedSentence;
+    }
 
     return (
         <>
@@ -246,13 +251,15 @@ const Category = () => {
                 {categorySub ? (
                     <div className="grid gap-4 grid-cols-4">
                         {categorySub.map((item) => {
-                            return <CategorySubCard value={item} fetchAPICategorySub={fetchCategorySub}/>;
+                            return <CategorySubCard key={item.id} value={item} fetchAPICategorySub={fetchCategorySub} />;
                         })}
-                        <div
-                            onClick={() => setModalAddCategorySub(true)}
-                            className="cursor-pointer text-[100px] box-content border-2 hover:border-slate-400 hover:text-slate-400 text-slate-300 border-dashed rounded-2xl p-2 text-center flex justify-center items-center"
-                        >
-                            +
+                        <div className="flex justify-center items-center">
+                            <div
+                                onClick={() => setModalAddCategorySub(true)}
+                                className="cursor-pointer border hover:text-blue-400 hover:border-blue-400 text-slate-300 py-2 px-10 rounded-md text-center"
+                            >
+                                + Thêm
+                            </div>
                         </div>
                         <Modal
                             title={
@@ -283,14 +290,14 @@ const Category = () => {
                                     <Input />
                                 </Form.Item>
 
-                                {category && category.category && (
+                                {category && (
                                     <Form.Item
                                         label="Loại"
                                         name="CategoryId"
                                         rules={[{ required: true }]}
                                     >
                                         <Select placeholder="Chọn loại sản phẩm">
-                                            {category.category.map(
+                                            {category.map(
                                                 (item, index) => {
                                                     // console.log(item)
                                                     return (
