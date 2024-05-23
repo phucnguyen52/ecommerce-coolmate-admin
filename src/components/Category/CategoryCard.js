@@ -70,26 +70,59 @@ const CategoryCard = (props) => {
         setVisible(false);
     };
 
-    const onFinish = (values) => {
-        if(values.Name===value.Name){
-            toast.warning('Không có sự thay đổi', {
+    const onFinish = async (values) => {
+        if (values.Name === value.Name) {
+            toast.warning("Không có sự thay đổi", {
                 autoClose: 1000,
             });
-            return 0
+            return 0;
         }
-        const req = { Name: values.Name };
+        const data = { Name: values.Name };
         const handleUpdateCategory = async () => {
-            await axios.put(
-                `http://localhost:8080/api/category/${value.id}`,
-                req
-            );
-            fetchAPICategory();
-            toast.success("Đã cập nhật danh mục thành công", {
-                autoClose: 1000,
-            });
+            try {
+                const req = await fetch(
+                    `http://localhost:8080/api/category/${value.id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data),
+                    }
+                );
+                const res = await req.json();
+                if (res.succes) {
+                    await fetchAPICategory();
+                    toast.success("Đã cập nhật danh mục thành công", {
+                        position: "top-right",
+                        autoClose: 1000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                } else {
+                    toast.warning(toast.warning(res.message));
+                }
+            } catch (error) {
+                console.error(
+                    "Có lỗi xảy ra khi cập nhật chi tiết danh mục:",
+                    error
+                );
+                // Xử lý lỗi ở đây nếu cần
+                toast.error("Có lỗi xảy ra khi cập nhật chi tiết danh mục", {
+                    position: "top-right",
+                    autoClose: 1000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
         };
-        handleUpdateCategory();
-
+        await handleUpdateCategory();
         setVisible(false); // Ẩn modal sau khi submit thành công
     };
     return (

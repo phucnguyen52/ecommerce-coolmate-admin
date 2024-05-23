@@ -11,6 +11,7 @@ import {
     ShoppingCartOutlined,
     SkinOutlined,
     TeamOutlined,
+    LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import { APP_ROUTER } from "../../utils/Constants";
@@ -69,24 +70,20 @@ function MainLayout() {
             ),
         ]),
         getItem("Đơn hàng", "sub3", <ShoppingCartOutlined />, [
-            getItem(
-                <Link to={'/order/1'}>Đang chờ xác nhận</Link>,
-                "8"
-            ),
-            getItem(
-                <Link to={'/order/2'}>Đang vận chuyển</Link>,
-                "9"
-            ),
-            getItem(
-                <Link to={'/order/3'}>Đang giao hàng</Link>,
-                "10"
-            ),
-            getItem(<Link to={'/order/4'}>Đã giao</Link>, "11"),
+            getItem(<Link to={"/order/1"}>Đang chờ xác nhận</Link>, "8"),
+            getItem(<Link to={"/order/2"}>Đang vận chuyển</Link>, "9"),
+            getItem(<Link to={"/order/3"}>Đang giao hàng</Link>, "10"),
+            getItem(<Link to={"/order/4"}>Đã giao</Link>, "11"),
         ]),
         getItem(
             <Link to={APP_ROUTER.LISTUSER}>Người dùng</Link>,
             "12",
             <TeamOutlined />
+        ),
+        getItem(
+            <Link to={APP_ROUTER.LOGIN}>Đăng xuất</Link>,
+            "13",
+            <LogoutOutlined />
         ),
     ];
     return (

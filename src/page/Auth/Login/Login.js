@@ -27,12 +27,13 @@ function Login() {
                     }
                 );
 
-                if (response && response.data) {
+                if (response && response.data && response.data.roleID === 1) {
                     Cookies.set("token", response.data.token);
                     toast.success("Đăng nhập thành công");
                     navigate("/home");
                 } else {
                     console.error("Đăng nhập không thành công");
+                    toast.error("Bạn không phải là admin");
                 }
             } catch (error) {
                 setErrors(error.response.data.message);

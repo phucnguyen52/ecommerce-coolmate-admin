@@ -13,7 +13,7 @@ const ListUser = () => {
             );
             const res = await req.json();
             if (res.succes) {
-                console.log("res.user",res.user)
+                console.log("res.user", res.user);
                 setUsers(res.user);
                 setSearched(true);
             } else console.log(res.message);
@@ -32,7 +32,7 @@ const ListUser = () => {
     const buttonPage = (num) => {
         return [...Array(num)].map((item, index) => (
             <button
-            key={index}
+                key={index}
                 className={`border py-1 px-4 hover:border-blue-400 hover:text-blue-500 ${
                     page === index + 1 ? " border-blue-400 text-blue-500" : ""
                 }`}
@@ -51,7 +51,7 @@ const ListUser = () => {
                 const res = await req.json();
                 if (res.succes) {
                     setUsers(res);
-                    console.log("res.user",res)
+                    console.log("res.user", res);
                     setSearched(false);
                 } else {
                     console.log(res.message);
@@ -61,14 +61,13 @@ const ListUser = () => {
             }
         }
     };
-    console.log(users)
+    console.log(users);
     const handleChange = (e) => {
         const { value } = e.target;
         setSearchTerm(value);
         if (value === "") {
             fetchUser();
             setSearched(false);
-
         }
     };
     return (
@@ -149,6 +148,12 @@ const ListUser = () => {
                             >
                                 Vai trò
                             </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 bg-gray-100 dark:bg-gray-800"
+                            >
+                                Thao tác
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,6 +175,15 @@ const ListUser = () => {
                                     </td>
                                     <td className="px-6 py-2">{user.Email}</td>
                                     <td className="px-6 py-2">{user.RoleId}</td>
+                                    <td className="px-6 py-2">
+                                        <button
+                                            type="button"
+                                            class="py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                        >
+                                            Đặt lại mật khẩu
+                                        </button>
+                                        
+                                    </td>
                                 </tr>
                             ))
                         ) : (
@@ -184,7 +198,9 @@ const ListUser = () => {
                 {searched && (
                     <>
                         <div className="flex gap-2 mt-20 items-center justify-center">
-                            {users ? buttonPage(Math.ceil(users?.count / 20)) : null}
+                            {users
+                                ? buttonPage(Math.ceil(users?.count / 20))
+                                : null}
                         </div>
                     </>
                 )}

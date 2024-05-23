@@ -22,7 +22,7 @@ const CategorySubCard = (props) => {
     const fetchCategory = async () => {
         try {
             const req = await fetch(`http://localhost:8080/api/category`);
-            const res = await req.json();
+            const res = await req.data;
             if (res.succes) {
                 setCategory(res.category);
             } else {
@@ -91,23 +91,27 @@ const CategorySubCard = (props) => {
         setVisible(false);
     };
     const onFinish = (values) => {
-        const req = {
+        const data = {
             Image: imageUrl,
             CategoryId: values.CategoryId,
         };
-        
+
         if (values.Name !== value.Name) {
-            req.Name = values.Name;
-            console.log("test", values.Name,value.Name);
+            data.Name = values.Name;
+            console.log("test", values.Name, value.Name);
         }
         const handleUpdateCategorySub = async () => {
             try {
-                const response = await axios.put(
-                    `http://localhost:8080/api/categorysub/${value.id}`,
-                    req
-                );
-
-                if (response.data.succes) {
+                const req = await fetch(`http://localhost:8080/api/categorysub/${value.id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                       "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                 })
+                 const res = await req.json();
+                if (res.succes) {
                     console.log("Đã cập nhật chi tiết danh mục thành công");
                     fetchAPICategorySub();
                     toast.success("Đã cập nhật chi tiết danh mục thành công", {
@@ -120,20 +124,9 @@ const CategorySubCard = (props) => {
                         progress: undefined,
                     });
                 } else {
-                    console.error(
-                        "Có lỗi xảy ra khi cập nhật chi tiết danh mục:",
-                        response.data.message
+                    toast.warning(
+                        toast.warning(res.message)
                     );
-                    // Xử lý thông báo lỗi
-                    toast.error(response.data.message, {
-                        position: "top-right",
-                        autoClose: 1000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                    });
                 }
             } catch (error) {
                 console.error(
