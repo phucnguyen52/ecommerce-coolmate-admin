@@ -35,7 +35,18 @@ const AddStore = () => {
    const sizeDefault = ['S', 'M', 'L', 'XL', '2XL', '3XL']
 
 
-
+   const validate = (numberPhone) => {
+      let resultPhone = true
+      if (/(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(numberPhone.trim())) {
+         resultPhone = true
+      } else {
+         toast.warning('Số điện thoại không hợp lệ', {
+            autoClose: 1000,
+        })
+         resultPhone = false
+      }
+      return resultPhone
+   }
    const onReset = () => {
       form.resetFields()
       formVariant.resetFields()
@@ -43,11 +54,14 @@ const AddStore = () => {
    };
    const onFinish = async (values) => {
       const userDataString = Cookies.get('token');
-        if (!userDataString) {
-            toast.warning("Vui lòng đăng nhập")
-            nagative(APP_ROUTER.LOGIN)
-            return 0;
-        }
+      if (!userDataString) {
+         toast.warning("Vui lòng đăng nhập", {
+            autoClose: 1000,
+        })
+         nagative(APP_ROUTER.LOGIN)
+         return 0;
+      }
+      if (!validate(values.NumberPhone)) return 0;
       console.log('Received values:', values);
       console.log("post", addStore)
       const data = addStore.map(item => ({
@@ -69,7 +83,9 @@ const AddStore = () => {
          const res = await req.json();
          console.log(res)
          if (res.succes === true) {
-            toast.success('Tạo nhập thành công')
+            toast.success('Tạo nhập thành công', {
+               autoClose: 1000,
+           })
             onReset()
             handleCancelVariant()
             handleCancelSearch()
@@ -97,13 +113,11 @@ const AddStore = () => {
       setModalAddVariant(false);
    };
    const addVariant = async (values) => {
-      console.log(values)
-      if (values.price < 1 || values.price < 1) return 0
+      values.color=charUpperCase(values.color)
+      console.log(values.color)
       const index = addStore.findIndex(item => item.ProductId === productId.ProductId);
-
       if (index !== -1) {
          // Nếu productId đã tồn tại, thêm đối tượng mới vào mảng "variants" của đối tượng có productId tương ứng
-
          setAddStore(prevState => {
             const newState = [...prevState];
             const variantIndex = newState[index].variants.findIndex(variant =>
@@ -121,6 +135,9 @@ const AddStore = () => {
          // Nếu productId không tồn tại, tạo một đối tượng mới và thêm vào mảng A
          setAddStore(prevState => [...prevState, { ...productId, variants: [values] }]);
       }
+      toast.success('Đã thêm vào phiếu nhập', {
+         autoClose: 1000,
+     })
    };
    // console.log('addStore', addStore)
 
@@ -164,6 +181,18 @@ const AddStore = () => {
 
 
 
+   const onChangeNumber = (e) => {
+      console.log(e.target.value);
+   };
+   const charUpperCase = (sentence) => {
+      sentence = sentence.toLowerCase();
+      let words = sentence.split(' ');
+      let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+      let capitalizedSentence = capitalizedWords.join(' ');
+      return capitalizedSentence;
+   }
+
+
 
    return (
       <div className='m-10 bg-slate-100 p-4'>
@@ -184,7 +213,12 @@ const AddStore = () => {
             <Form.Item name="NumberPhone" label="Số điện thoại"
             // rules={[{ required: true, }]}
             >
-               <InputNumber />
+               <Input
+                  style={{
+                     width: '50%',
+                  }}
+                  onChange={onChangeNumber}
+               />
             </Form.Item>
             <Form.Item name="Address" label="Địa chỉ"
             //  rules={[{ required: true, }]}
@@ -205,23 +239,23 @@ const AddStore = () => {
                   </tr>
                </thead>
                <tbody>
-                  {addStore.length > 0 && addStore.map((item, index) =>  (
-                     item.variants.map((variant, i) =>(
-                           <tr className='text-black bg-white' key={index-i}>
-                              {i === 0 && (
-                                 <>
-                                    <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{index + 1}</td>
-                                    <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{item.ProductId}</td>
-                                    <td className='align-top p-2 border' rowSpan={item.variants.length}>{item.Name}</td>
-                                 </>
-                              )}
+                  {addStore.length > 0 && addStore.map((item, index) => (
+                     item.variants.map((variant, i) => (
+                        <tr className='text-black bg-white' key={index - i}>
+                           {i === 0 && (
+                              <>
+                                 <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{index + 1}</td>
+                                 <td className='align-top p-2 text-center border' rowSpan={item.variants.length}>{item.ProductId}</td>
+                                 <td className='align-top p-2 border' rowSpan={item.variants.length}>{item.Name}</td>
+                              </>
+                           )}
 
-                                 <td className='p-2 text-center border'>{variant.color}</td>
-                                 <td className='p-2 text-center border'>{variant.size}</td>
-                                 <td className='p-2 text-center border'>{variant.quantity}</td>
-                                 <td className='p-2 text-center border'>{variant.price}.000VND</td>
-                           </tr>
-                        ))
+                           <td className='p-2 text-center border'>{variant.color}</td>
+                           <td className='p-2 text-center border'>{variant.size}</td>
+                           <td className='p-2 text-center border'>{variant.quantity}</td>
+                           <td className='p-2 text-center border'>{variant.price}.000VND</td>
+                        </tr>
+                     ))
                   ))}
                   <tr className='bg-white'>
                      <td colSpan={7} className='p-0'>
@@ -248,21 +282,27 @@ const AddStore = () => {
             footer={null} // Không hiển thị footer mặc định của modal
          >
             <Search className='mb-4' placeholder="Nhập tên sản phẩm" onSearch={onSearch} enterButton />
-            {product &&
+            {product && (product.length > 0 ?
                <div>
                   {product.map((item, index) => {
                      return (
-                        <div
-                           key={index}
-                           onClick={() => selectProduct(item.id, item.NameProducts)}
-                           className='bg-slate-100 py-1 px-3 m-1 rounded-md hover:border hover:font-semibold cursor-pointer'
-                        >
-                           {item.NameProducts}
+                        <div key={index} className='flex items-center gap-4 mb-1 rounded-md hover:font-semibold cursor-pointer bg-slate-100 '>
+                           <img className='h-14 w-10 object-cover rounded-sm' src={JSON.parse(item.Image)[0]} alt="" />
+                           <div
+
+                              onClick={() => selectProduct(item.id, item.NameProducts)}
+                              className='p-2'
+                           >
+                              {item.NameProducts}
+                           </div>
                         </div>
+
                      );
                   })}
                </div>
-            }
+               :
+               <div>Không có sản phẩm phù hợp</div>
+            )}
          </Modal>
 
          <Modal
@@ -309,6 +349,7 @@ const AddStore = () => {
                   rules={[{ required: true }]}
                >
                   <InputNumber
+                     min={1}
                      style={{
                         width: '50%',
                      }}

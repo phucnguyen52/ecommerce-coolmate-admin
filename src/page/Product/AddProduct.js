@@ -45,15 +45,15 @@ const AddProduct = () => {
       let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
       let capitalizedSentence = capitalizedWords.join(' ');
       return capitalizedSentence;
-  }
+   }
    const onFinish = async (values) => {
-      if (!imageUrl.length||imageUrl.length < 2) {
+      if (!imageUrl.length || imageUrl.length < 2) {
          toast.warning("Vui lòng chọn tối thiểu 2 ảnh", {
             autoClose: 1000,
          });
          console.log(imageUrl)
          return 0;
-      } 
+      }
       const product = {
          CategorySubId: values.CategorySubId,
          CollectionID: values.CollectionID,
@@ -151,6 +151,7 @@ const AddProduct = () => {
 
             <Form.Item label="Giá" name="Price" rules={[{ required: true, }]}>
                <InputNumber
+                  min={0}
                   style={{
                      width: '50%',
                   }}
@@ -160,6 +161,8 @@ const AddProduct = () => {
 
             <Form.Item label="Giảm giá" name="Discount">
                <InputNumber
+                  min={0}
+                  max={100}
                   style={{
                      width: '50%',
                   }}

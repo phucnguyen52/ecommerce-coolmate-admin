@@ -10,10 +10,6 @@ import ListProduct from '../page/Product/ListProduct'
 import Category from '../page/Category/Category'
 import ProductDetail from '../page/Product/ProductDetail'
 import NeedsCollections from "../page/NeedsCollections/NeedsCollections";
-import OrderDelivered from "../page/Order/OrderDelivered";
-import OrderDelivering from "../page/Order/OrderDelivering";
-import OrderTransport from "../page/Order/OrderTransport";
-import OrderWaitConfirm from "../page/Order/OrderWaitConfirm";
 import Order from "../page/Order/Order";
 import ListUser from "../page/User/ListUser";
 import Store from '../page/Store/Store'
@@ -57,30 +53,10 @@ const router = createBrowserRouter([
                 path: APP_ROUTER.NEEDS_COLLECTIONS,
                 element: <NeedsCollections />,
             },
-            // {
-            //     path: APP_ROUTER.ORDER,
-            //     element: <Order />,
-            // },
             {
                 path: '/order/:id',
                 element: <Order />,
-            },
-            {
-                path: APP_ROUTER.ORDERDELIVERED,
-                element: <OrderDelivered />,
-            },
-            {
-                path: APP_ROUTER.ORDERDELIVERING,
-                element: <OrderDelivering />,
-            },
-            {
-                path: APP_ROUTER.ORDERTRANS,
-                element: <OrderTransport />,
-            },
-            {
-                path: APP_ROUTER.ORDERWAIT,
-                element: <OrderWaitConfirm />,
-            },
+            },            
             {
                 path: APP_ROUTER.LISTUSER,
                 element: <ListUser />,

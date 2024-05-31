@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     ExclamationCircleFilled,
     DeleteOutlined,
@@ -13,6 +13,11 @@ const CollectionCard = (props) => {
     const { value, fetchAPICollection } = props;
     const [form] = useForm();
     const [visible, setVisible] = useState(false);
+
+    // useEffect(()=>{
+    //     form.setFieldsValue({ Name: value.Name });
+    // },[value])
+
 
     const showModal = () => {
         setVisible(true);
@@ -39,17 +44,16 @@ const CollectionCard = (props) => {
                             }
                         );
                         if (response.status === 200) {
-                            console.log("Xóa bộ sưu tập thành công.");
+                            if (response.data.succes) {
+                                toast.success(response.data.message, {
+                                    autoClose: 1000,
+                                });
+                            } else {
+                                toast.warning(response.data.message, {
+                                    autoClose: 1000,
+                                });
+                            }
                             fetchAPICollection();
-                            toast.success("Đã xóa bộ sưu tập thành công", {
-                                position: "top-right",
-                                autoClose: 1000,
-                                hideProgressBar: true,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                            });
                         }
                     } catch (error) {
                         console.error(
@@ -66,10 +70,10 @@ const CollectionCard = (props) => {
         });
     };
 
-    
+
 
     const onFinish = (values) => {
-        if(values.Name===value.Name){
+        if (values.Name === value.Name) {
             toast.warning('Không có sự thay đổi', {
                 autoClose: 1000,
             });
@@ -77,26 +81,29 @@ const CollectionCard = (props) => {
         }
         const req = { Name: charUpperCase(values.Name) };
         const handleUpdateCollection = async () => {
-            await axios.put(
-                `http://localhost:8080/api/collection/${value.id}`,
-                req
-            );
-
-            console.log("Đã cập nhật bộ sưu tập thành công");
-            await new Promise(resolve => setTimeout(resolve, 500));
-            fetchAPICollection();
-            toast.success("Đã cập nhật bộ sưu tập thành công", {
-                position: "top-right",
-                autoClose: 1000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            try {
+                const response = await axios.put(
+                    `http://localhost:8080/api/collection/${value.id}`,
+                    req
+                );
+                if (response.data.succes) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    fetchAPICollection();
+                    toast.success("Đã cập nhật bộ sưu tập thành công", {
+                        autoClose: 1000,
+                    });
+                } else {
+                    console.error(
+                        "Có lỗi xảy ra khi cập nhật bộ sưu tập:",
+                        response.data.message
+                    );
+                }
+            } catch (error) {
+                console.error("Có lỗi xảy ra khi cập nhật nhu cầu:", error);
+                // Xử lý lỗi nếu cần
+            }
         };
         handleUpdateCollection();
-
         setVisible(false);
     };
 
@@ -135,13 +142,13 @@ const CollectionCard = (props) => {
                                 CẬP NHẬT BỘ SƯU TẬP
                             </div>
                         }
-                        visible={visible}
+                        open={visible}
                         onCancel={handleCancel}
                         footer={null} // Không hiển thị footer mặc định của modal
                     >
                         <Form
                             form={form}
-                            name="myForm"
+                            name="update-collection"
                             initialValues={{ Name: value.Name }}
                             onFinish={onFinish}
                         >

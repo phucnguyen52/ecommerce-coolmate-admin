@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     ExclamationCircleFilled,
     DeleteOutlined,
@@ -12,6 +12,18 @@ const { useForm } = Form;
 
 const NeedCard = (props) => {
     const { value, fetchAPINeed } = props;
+    const [form] = useForm();
+    const [visible, setVisible] = useState(false);
+
+    const showModal = () => {
+        setVisible(true);
+    };
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+
+
     // console.log(value)
     const handleDelete = (id) => {
         console.log(id);
@@ -33,18 +45,16 @@ const NeedCard = (props) => {
                             }
                         );
                         if (response.status === 200) {
-                            console.log("Xóa nhu cầu thành công.");
-                            await new Promise(resolve => setTimeout(resolve, 500));
+                            if(response.data.succes){
+                                toast.success(response.data.message, {
+                                    autoClose: 1000,
+                                });
+                            } else {
+                                toast.warning(response.data.message, {
+                                        autoClose: 1000,
+                                    });
+                            }
                             fetchAPINeed();
-                            toast.success("Đã xóa nhu cầu thành công", {
-                                position: "top-right",
-                                autoClose: 1000,
-                                hideProgressBar: true,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                            });
                         }
                     } catch (error) {
                         console.error("Lỗi khi gửi yêu cầu xóa nhu cầu", error);
@@ -58,16 +68,6 @@ const NeedCard = (props) => {
         });
     };
 
-    const [form] = useForm();
-
-    const [visible, setVisible] = useState(false);
-
-    const showModal = () => {
-        setVisible(true);
-    };
-    const handleCancel = () => {
-        setVisible(false);
-    };
     const charUpperCase = (sentence) => {
         sentence = sentence.toLowerCase();
         let words = sentence.split(' ');
@@ -91,7 +91,7 @@ const NeedCard = (props) => {
                 );
 
                 if (response.data.succes) {
-                    console.log("Đã cập nhật nhu cầu thành công");
+                    await new Promise(resolve => setTimeout(resolve, 500));
                     fetchAPINeed();
                     toast.success("Đã cập nhật nhu cầu thành công", {
                         autoClose: 1000,
@@ -101,29 +101,10 @@ const NeedCard = (props) => {
                         "Có lỗi xảy ra khi cập nhật nhu cầu:",
                         response.data.message
                     );
-                    // Xử lý thông báo lỗi
-                    toast.error(response.data.message, {
-                        position: "top-right",
-                        autoClose: 1000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                    });
                 }
             } catch (error) {
                 console.error("Có lỗi xảy ra khi cập nhật nhu cầu:", error);
                 // Xử lý lỗi nếu cần
-                toast.error("Có lỗi xảy ra khi cập nhật nhu cầu", {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
             }
         };
 
@@ -159,13 +140,13 @@ const NeedCard = (props) => {
                                 CẬP NHẬT NHU CẦU
                             </div>
                         }
-                        visible={visible}
+                        open={visible}
                         onCancel={handleCancel}
                         footer={null} // Không hiển thị footer mặc định của modal
                     >
                         <Form
                             form={form}
-                            name="myForm"
+                            name="update-need"
                             initialValues={{ Name: value.NeedName }}
                             onFinish={onFinish}
                         >

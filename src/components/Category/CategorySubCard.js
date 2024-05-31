@@ -30,7 +30,7 @@ const CategorySubCard = (props) => {
     const fetchCategory = async () => {
         try {
             const req = await fetch(`http://localhost:8080/api/category`);
-            const res = await req.data;
+            const res = await req.json();
             if (res.succes) {
                 setCategory(res.category);
             } else {
@@ -62,20 +62,17 @@ const CategorySubCard = (props) => {
                             }
                         );
                         if (response.status === 200) {
-                            console.log("Xóa chi tiết danh mục thành công.");
-                            fetchAPICategorySub();
-                            toast.success(
-                                "Đã xóa chi tiết danh mục thành công",
-                                {
-                                    position: "top-right",
+                            if(response.data.succes){
+                                toast.success(response.data.message, {
                                     autoClose: 1000,
-                                    hideProgressBar: true,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                }
-                            );
+                                });
+                            } else {
+                                toast.warning(response.data.message, {
+                                        autoClose: 1000,
+                                    });
+                            }                           
+                            
+                            fetchAPICategorySub();
                         }
                     } catch (error) {
                         console.error(

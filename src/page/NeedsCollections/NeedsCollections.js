@@ -51,6 +51,7 @@ const NeedsCollections = () => {
     };
     const addCollection = async (value) => {
         console.log("Name", value);
+        value.Name = charUpperCase(value.Name)
         try {
             const req = await fetch(`http://localhost:8080/api/collection`, {
                 method: "POST",
@@ -73,6 +74,7 @@ const NeedsCollections = () => {
     };
     const addNeed = async (values) => {
         console.log("NeedName", values);
+        values.NeedName = charUpperCase(values.NeedName)
         try {
             const req = await fetch(`http://localhost:8080/api/need`, {
                 method: "POST",
@@ -93,6 +95,13 @@ const NeedsCollections = () => {
             throw error;
         }
     };
+    const charUpperCase = (sentence) => {
+        sentence = sentence.toLowerCase();
+        let words = sentence.split(' ');
+        let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        let capitalizedSentence = capitalizedWords.join(' ');
+        return capitalizedSentence;
+    }
     return (
         <>
             <div className="font-bold text-3xl mx-auto p-10 text-center">

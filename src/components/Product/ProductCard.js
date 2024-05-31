@@ -54,7 +54,7 @@ const ProductCard = (props) => {
          } else {
             console.error('fetchapi: failed')
          }
-      
+
       } catch {
          console.error('Promise fetchapi rejected')
       }
@@ -146,7 +146,7 @@ const ProductCard = (props) => {
    const handleCancel = () => {
       setVisible(false);
    };
-   const onFinish = async(values) => {
+   const onFinish = async (values) => {
       const product = {
          CategorySubId: values.CategorySubId,
          CollectionID: values.CollectionID,
@@ -156,18 +156,18 @@ const ProductCard = (props) => {
          Price: values.Price,
          Image: imageUrl
       }
-      
-      if(values.NameProducts!==value.NameProducts){
-         product.NameProducts=values.NameProducts
-     }
+
+      if (values.NameProducts !== value.NameProducts) {
+         product.NameProducts = values.NameProducts
+      }
       try {
          const req = await fetch(`http://localhost:8080/api/products/${value.id}`, {
-           method: 'PUT',
-           headers: {
-             'Content-Type': 'application/json',
-             // Thêm các headers khác nếu cần
-           },
-           body: JSON.stringify(product),
+            method: 'PUT',
+            headers: {
+               'Content-Type': 'application/json',
+               // Thêm các headers khác nếu cần
+            },
+            body: JSON.stringify(product),
          });
          const res = await req.json();
          if (res.succes) {
@@ -178,12 +178,12 @@ const ProductCard = (props) => {
             await new Promise(resolve => setTimeout(resolve, 500));
             fetchProduct()
             console.log(true)
-         } else  toast.warning(res.message, {
+         } else toast.warning(res.message, {
             autoClose: 1000,
          })
-       } catch (error) {
+      } catch (error) {
          console.error('Lỗi put product', error);
-       }
+      }
       // console.log('Received values:', product, values);
       // setVisible(false); // Ẩn modal sau khi submit thành công
    };
@@ -310,6 +310,8 @@ const ProductCard = (props) => {
 
                   <Form.Item label="Giá" name="Price" rules={[{ required: true, }]}>
                      <InputNumber
+                        min={1}
+                        max={100}
                         style={{
                            width: '50%',
                         }}
@@ -319,6 +321,7 @@ const ProductCard = (props) => {
 
                   <Form.Item label="Giảm giá" name="Discount">
                      <InputNumber
+                        min={0}
                         style={{
                            width: '50%',
                         }}

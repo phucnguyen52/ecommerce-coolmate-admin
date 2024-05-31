@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
+import { format } from 'date-fns'
 
 const Order = () => {
     const { id } = useParams()
@@ -70,14 +71,14 @@ const Order = () => {
     const dateFormat = 'YYYY-MM-DD'
     return (
         <div className="m-10">
-            <div>
+            <div className="mb-4 text-right">
                 <DatePicker
                     onChange={onChange}
                     defaultValue={dayjs(new Date().toISOString().slice(0, 10), dateFormat)}
                     maxDate={dayjs(new Date().toISOString().slice(0, 10), dateFormat)} />
             </div>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table className="w-full text-sm text-left text-black">
+                <thead className="text-xs text-white uppercase bg-black/80">
                     <tr className="border-2">
                         <th scope="col" className="text-center px-2 py-3 border-2">
                             OrderId
@@ -123,14 +124,14 @@ const Order = () => {
                                         <td rowSpan={order.Products.length} className="text-center align-top px-2 py-4 border">
                                             {order.orderID}
                                         </td>
-                                        <td rowSpan={order.Products.length} className="align-top px-2 py-4 border">
+                                        <td rowSpan={order.Products.length} className="align-top px-2 py-4 border no">
                                             {order.userName}
                                         </td>
                                         <td rowSpan={order.Products.length} className="align-top px-2 py-4 border">
                                             {order.address}
                                         </td>
                                         <td rowSpan={order.Products.length} className="text-center align-top px-2 py-4 border">
-                                            {order.oderDate}
+                                            {format(new Date(order.oderDate), 'dd/MM/yyyy HH:mm:ss')}
                                         </td>
                                         <td rowSpan={order.Products.length} className="align-top px-2 py-4 border">
                                             {order.paymentMethod}

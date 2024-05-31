@@ -72,8 +72,14 @@ const SaleProduct = () => {
                      <th scope="col" className="px-3 py-3 text-center">
 
                      </th>
-                     <th scope="col" colSpan={3} className="px-3 py-3">
+                     <th scope="col"  className="px-3 py-3">
                         Chi tiết sản phẩm
+                     </th>
+                     <th scope="col"  className="px-3 py-3">
+                        Giá
+                     </th>
+                     <th scope="col"  className="px-3 py-3">
+                        Giảm giá
                      </th>
                      <th scope="col" className="px-3 py-3  text-center">
                         Số lượng

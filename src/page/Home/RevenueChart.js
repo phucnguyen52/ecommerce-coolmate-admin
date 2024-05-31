@@ -29,7 +29,7 @@ const RevenueChart = () => {
    }
    console.log("data", data)
    useEffect(() => {
-      if (type === 'day') setValue(new Date().getMonth())
+      if (type === 'day') setValue(new Date().getMonth()+1)
       else setValue(new Date().getFullYear())
    }, [type])
    useEffect(() => {
@@ -99,7 +99,7 @@ const RevenueChart = () => {
                   data={data}
                   margin={{
                      top: 10,
-                     right: 30,
+                     right: 20,
                      left: 50,
                      bottom: 0,
                   }}

@@ -42,16 +42,15 @@ const CategoryCard = (props) => {
                             }
                         );
                         if (response.status === 200) {
-                            console.log("Xóa danh mục thành công.");
-                            toast.success("Đã xóa danh mục thành công", {
-                                position: "top-right",
-                                autoClose: 1000,
-                                hideProgressBar: true,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                            });
+                            if(response.data.succes){
+                                toast.success(response.data.message, {
+                                    autoClose: 1000,
+                                });
+                            } else {
+                                toast.warning(response.data.message, {
+                                        autoClose: 1000,
+                                    });
+                            }
                             fetchAPICategory();
                         }
                     } catch (error) {
