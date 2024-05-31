@@ -71,7 +71,7 @@ function MainLayout() {
         ]),
         getItem("Đơn hàng", "sub3", <ShoppingCartOutlined />, [
             getItem(<Link to={"/order/1"}>Đang chờ xác nhận</Link>, "8"),
-            getItem(<Link to={"/order/2"}>Đang vận chuyển</Link>, "9"),
+            getItem(<Link to={"/order/2"}>Đang chờ vận chuyển</Link>, "9"),
             getItem(<Link to={"/order/3"}>Đang giao hàng</Link>, "10"),
             getItem(<Link to={"/order/4"}>Đã giao</Link>, "11"),
         ]),
@@ -81,7 +81,7 @@ function MainLayout() {
             <TeamOutlined />
         ),
         getItem(
-            <Link to={APP_ROUTER.LOGIN}>Đăng xuất</Link>,
+            <Link to={APP_ROUTER.LOGOUT}>Đăng xuất</Link>,
             "13",
             <LogoutOutlined />
         ),
@@ -95,6 +95,7 @@ function MainLayout() {
                     }}
                 >
                     <Sider
+                        width={250}
                         collapsible
                         collapsed={collapsed}
                         onCollapse={(value) => setCollapsed(value)}

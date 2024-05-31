@@ -121,7 +121,7 @@ const ListUser = () => {
                     </div>
                 </div>
 
-                <table className="w-2/3 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mx-auto mt-8">
+                <table className="w-10/12 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mx-auto mt-8">
                     <thead className="text-sm text-gray-700 uppercase dark:text-gray-400">
                         <tr>
                             <th
@@ -174,7 +174,7 @@ const ListUser = () => {
                                         {user.UserName}
                                     </td>
                                     <td className="px-6 py-2">{user.Email}</td>
-                                    <td className="px-6 py-2">{user.RoleId}</td>
+                                    <td className="px-6 py-2">{user.RoleId === 1 ? 'Người quản lý' : 'Khách hàng'}</td>
                                     <td className="px-6 py-2">
                                         <button
                                             type="button"

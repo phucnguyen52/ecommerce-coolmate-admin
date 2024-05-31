@@ -73,13 +73,13 @@ const CollectionCard = (props) => {
 
 
     const onFinish = (values) => {
-        if (values.Name === value.Name) {
+        if (values.Name.trim() === value.Name) {
             toast.warning('Không có sự thay đổi', {
                 autoClose: 1000,
             });
             return 0
         }
-        const req = { Name: charUpperCase(values.Name) };
+        const req = { Name: charUpperCase(values.Name.trim()) };
         const handleUpdateCollection = async () => {
             try {
                 const response = await axios.put(

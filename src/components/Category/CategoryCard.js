@@ -76,13 +76,13 @@ const CategoryCard = (props) => {
         return capitalizedSentence;
     }
     const onFinish = (values) => {
-        if (values.Name === value.Name) {
+        if (values.Name.trim() === value.Name) {
             toast.warning('Không có sự thay đổi', {
                 autoClose: 1000,
             });
             return 0;
         }
-        const data = { Name: charUpperCase(values.Name) };
+        const data = { Name: charUpperCase(values.Name.trim()) };
         const handleUpdate = async (category) => {
             try {
                 const req = await fetch(`http://localhost:8080/api/category/${value.id}`, {

@@ -1,19 +1,20 @@
-import { createBrowserRouter, redirect } from 'react-router-dom'
-import { APP_ROUTER } from '../utils/Constants'
-import MainLayout from '../layout/Main/MainLayout'
-import AuthLayout from '../layout/Auth/AuthLayout'
-import HomePage from '../page/Home/HomePage'
-import Login from '../page/Auth/Login/Login'
-import Register from '../page/Auth/Register/Register'
-import AddProduct from '../page/Product/AddProduct'
-import ListProduct from '../page/Product/ListProduct'
-import Category from '../page/Category/Category'
-import ProductDetail from '../page/Product/ProductDetail'
+import { createBrowserRouter, redirect } from "react-router-dom";
+import { APP_ROUTER } from "../utils/Constants";
+import MainLayout from "../layout/Main/MainLayout";
+import AuthLayout from "../layout/Auth/AuthLayout";
+import HomePage from "../page/Home/HomePage";
+import Login from "../page/Auth/Login/Login";
+import Register from "../page/Auth/Register/Register";
+import AddProduct from "../page/Product/AddProduct";
+import ListProduct from "../page/Product/ListProduct";
+import Category from "../page/Category/Category";
+import ProductDetail from "../page/Product/ProductDetail";
 import NeedsCollections from "../page/NeedsCollections/NeedsCollections";
 import Order from "../page/Order/Order";
 import ListUser from "../page/User/ListUser";
-import Store from '../page/Store/Store'
-import AddStore from '../page/Store/AddStore'
+import Store from "../page/Store/Store";
+import AddStore from "../page/Store/AddStore";
+import Logout from "../page/Auth/Logout/Logout";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
                 element: <NeedsCollections />,
             },
             {
-                path: '/order/:id',
+                path: "/order/:id",
                 element: <Order />,
             },            
             {
@@ -63,11 +64,11 @@ const router = createBrowserRouter([
             },
             {
                 path: APP_ROUTER.STORE,
-                element: <Store />
+                element: <Store />,
             },
             {
                 path: APP_ROUTER.ADD_STORE,
-                element: <AddStore />
+                element: <AddStore />,
             },
         ],
     },
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
             {
                 path: APP_ROUTER.REGISTER,
                 element: <Register />,
+            },
+            {
+                path: APP_ROUTER.LOGOUT,
+                element: <Logout />,
             },
         ],
     },

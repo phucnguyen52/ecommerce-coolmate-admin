@@ -95,8 +95,8 @@ const CategorySubCard = (props) => {
             CategoryId: values.CategoryId,
         };
 
-        if (values.Name !== value.Name) {
-            data.Name =charUpperCase(values.Name);
+        if (values.Name.trim() !== value.Name) {
+            data.Name =charUpperCase(values.Name.trim());
             // console.log("test", values.Name,value.Name);
         }
         const handleUpdateCategorySub = async () => {

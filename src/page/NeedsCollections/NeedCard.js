@@ -76,13 +76,13 @@ const NeedCard = (props) => {
         return capitalizedSentence;
     }
     const onFinish = (values) => {
-        if(values.Name===value.NeedName){
+        if(values.Name.trim() === value.NeedName){
             toast.warning('Không có sự thay đổi', {
                 autoClose: 1000,
             });
             return 0
         }
-        const req = { NeedName: charUpperCase(values.Name) };
+        const req = { NeedName: charUpperCase(values.Name.trim()) };
         const handleUpdateNeed = async () => {
             try {
                 const response = await axios.put(

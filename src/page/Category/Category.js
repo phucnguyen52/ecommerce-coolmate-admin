@@ -62,7 +62,10 @@ const Category = () => {
             if (res.succes) {
                 setCategorySub(res.data);
             } else {
-                console.error("Không thể lấy dữ liệu category sub:", res.message);
+                console.error(
+                    "Không thể lấy dữ liệu category sub:",
+                    res.message
+                );
             }
         } catch (error) {
             console.error("Có lỗi xảy ra khi fetch category sub:", error);
@@ -104,6 +107,11 @@ const Category = () => {
     };
 
     const onFinish = async (values) => {
+        console.log("1111",imageUrl)
+        if (!imageUrl) {
+            toast.warning("Vui lòng chọn ảnh cho danh mục");
+            return 0;
+        }
         const valueCategorySub = {
             ...values,
             Name: charUpperCase(values.Name.trim()),
@@ -136,8 +144,8 @@ const Category = () => {
     };
     const addCategory = async (value) => {
         const category = {
-            Name: charUpperCase(value.Name)
-        }
+            Name: charUpperCase(value.Name),
+        };
         try {
             const req = await fetch(`http://localhost:8080/api/category`, {
                 method: "POST",
@@ -161,11 +169,13 @@ const Category = () => {
 
     const charUpperCase = (sentence) => {
         sentence = sentence.toLowerCase();
-        let words = sentence.split(' ');
-        let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
-        let capitalizedSentence = capitalizedWords.join(' ');
+        let words = sentence.split(" ");
+        let capitalizedWords = words.map(
+            (word) => word.charAt(0).toUpperCase() + word.slice(1)
+        );
+        let capitalizedSentence = capitalizedWords.join(" ");
         return capitalizedSentence;
-    }
+    };
 
     return (
         <>
@@ -251,7 +261,13 @@ const Category = () => {
                 {categorySub ? (
                     <div className="grid gap-4 grid-cols-4">
                         {categorySub.map((item) => {
-                            return <CategorySubCard key={item.id} value={item} fetchAPICategorySub={fetchCategorySub} />;
+                            return (
+                                <CategorySubCard
+                                    key={item.id}
+                                    value={item}
+                                    fetchAPICategorySub={fetchCategorySub}
+                                />
+                            );
                         })}
                         <div className="flex justify-center items-center">
                             <div
@@ -297,19 +313,17 @@ const Category = () => {
                                         rules={[{ required: true }]}
                                     >
                                         <Select placeholder="Chọn loại sản phẩm">
-                                            {category.map(
-                                                (item, index) => {
-                                                    // console.log(item)
-                                                    return (
-                                                        <Option
-                                                            key={index}
-                                                            value={item.id}
-                                                        >
-                                                            {item.Name}
-                                                        </Option>
-                                                    );
-                                                }
-                                            )}
+                                            {category.map((item, index) => {
+                                                // console.log(item)
+                                                return (
+                                                    <Option
+                                                        key={index}
+                                                        value={item.id}
+                                                    >
+                                                        {item.Name}
+                                                    </Option>
+                                                );
+                                            })}
                                         </Select>
                                     </Form.Item>
                                 )}
