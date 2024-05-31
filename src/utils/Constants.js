@@ -21,4 +21,5 @@ export const APP_ROUTER = {
     REGISTER: "/auth/register",
     CHANGE_PASSWORD: "change-password",
     REFRESH_TOKEN: "/auth/accessToken-generate",
+    LOGOUT: "/auth/logout",
 };

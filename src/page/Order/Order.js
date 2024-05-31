@@ -3,29 +3,47 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 const Order = () => {
-    const { id } = useParams()
-    console.log(id)
+    const { id } = useParams();
+    const [totalOrderPrice, setTotalOrderPrice] = useState(0);
+    console.log(id);
     // const Name = location.state.data;
     const [orders, setOrders] = useState([]);
     const [date, setDate] = useState({
-        day: new Date().getDate().toString().padStart(2, '0'),
-        month: (new Date().getMonth() + 1).toString().padStart(2, '0')
+        day: new Date().getDate().toString().padStart(2, "0"),
+        month: (new Date().getMonth() + 1).toString().padStart(2, "0"),
     });
 
     const fetchData = async () => {
         try {
-            const req = await fetch(`http://localhost:8080/api/admin/order/${id}/${date.day}/${date.month}`);
-            const res = await req.json()
+            const req = await fetch(
+                `http://localhost:8080/api/admin/order/${id}/${date.day}/${date.month}`
+            );
+            const res = await req.json();
             if (res.succes) {
-                setOrders(res.order);
-                console.log(res.order);
+                const ordersWithTotalPrice = res.order.map((order) => {
+                    const totalPrice = order.Products.reduce(
+                        (total, product) => total + product.price,
+                        0
+                    );
+                    return {
+                        ...order,
+                        totalPrice,
+                    };
+                });
+                const total = ordersWithTotalPrice.reduce(
+                    (total, order) => total + order.totalPrice,
+                    0
+                );
+                setTotalOrderPrice(total);
+                setOrders(ordersWithTotalPrice);
+                console.log(ordersWithTotalPrice);
+                console.log("A", ordersWithTotalPrice);
             }
-
         } catch (error) {
-            console.log("Lỗi lấy đơn hàng", error)
+            console.log("Lỗi lấy đơn hàng", error);
         }
     };
     useEffect(() => {
@@ -33,126 +51,214 @@ const Order = () => {
     }, [id, date]);
     const handleConfirm = async (orderId) => {
         const update = {
-            "StatusOrderId": Number(id) + 1
-        }
-        console.log(update, orderId)
+            StatusOrderId: Number(id) + 1,
+        };
+        console.log(update, orderId);
         try {
-            const req = await fetch(`http://localhost:8080/api/users/order/${orderId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Thêm các headers khác nếu cần
-                },
-                body: JSON.stringify(update),
-            })
-            const res = await req.json()
-            console.log(res)
+            const req = await fetch(
+                `http://localhost:8080/api/users/order/${orderId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        // Thêm các headers khác nếu cần
+                    },
+                    body: JSON.stringify(update),
+                }
+            );
+            const res = await req.json();
+            console.log(res);
             if (res.succes) {
-                toast.success(res.message)
-                fetchData()
-            } else toast.error('Lỗi chuyển trạng thái')
-        } catch (error) {
-
-        }
-    }
+                toast.success(res.message);
+                fetchData();
+            } else toast.error("Lỗi chuyển trạng thái");
+        } catch (error) {}
+    };
     const onChange = (date, dateString) => {
         if (dateString) {
             let month = dateString.slice(5, 7);
             let day = dateString.slice(8, 10);
             setDate({
                 day: day,
-                month: month
-            })
+                month: month,
+            });
         }
         // else console.log("null")
         // console.log(dateString, day, month);
     };
-    const dateFormat = 'YYYY-MM-DD'
+    const dateFormat = "YYYY-MM-DD";
     return (
         <div className="m-10">
             <div>
                 <DatePicker
                     onChange={onChange}
-                    defaultValue={dayjs(new Date().toISOString().slice(0, 10), dateFormat)}
-                    maxDate={dayjs(new Date().toISOString().slice(0, 10), dateFormat)} />
+                    defaultValue={dayjs(
+                        new Date().toISOString().slice(0, 10),
+                        dateFormat
+                    )}
+                    maxDate={dayjs(
+                        new Date().toISOString().slice(0, 10),
+                        dateFormat
+                    )}
+                />
             </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                     <tr className="border-2">
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             OrderId
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             User Name
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             Address
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             Order Date
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             Payment Method
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             Product Name
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             Color
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             Quantity
                         </th>
-                        <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
                             Size
                         </th>
-                        {id !== '4' &&
-                            <th scope="col" className="text-center px-2 py-3 border-2">
+                        <th
+                            scope="col"
+                            className="text-center px-2 py-3 border-2"
+                        >
+                            Tổng tiền
+                        </th>
+                        {id !== "4" && (
+                            <th
+                                scope="col"
+                                className="text-center px-2 py-3 border-2"
+                            >
                                 Chuyển trạng thái
                             </th>
-                        }
-
+                        )}
                     </tr>
                 </thead>
                 <tbody>
-                    {orders.map(order => (
+                    {orders.map((order) =>
                         order.Products.map((product, index) => (
                             <tr key={`${order.orderID}-${index}`}>
                                 {index === 0 && (
                                     <>
-                                        <td rowSpan={order.Products.length} className="text-center align-top px-2 py-4 border">
+                                        <td
+                                            rowSpan={order.Products.length}
+                                            className="text-center align-top px-2 py-4 border"
+                                        >
                                             {order.orderID}
                                         </td>
-                                        <td rowSpan={order.Products.length} className="align-top px-2 py-4 border">
+                                        <td
+                                            rowSpan={order.Products.length}
+                                            className="align-top px-2 py-4 border"
+                                        >
                                             {order.userName}
                                         </td>
-                                        <td rowSpan={order.Products.length} className="align-top px-2 py-4 border">
+                                        <td
+                                            rowSpan={order.Products.length}
+                                            className="align-top px-2 py-4 border"
+                                        >
                                             {order.address}
                                         </td>
-                                        <td rowSpan={order.Products.length} className="text-center align-top px-2 py-4 border">
+                                        <td
+                                            rowSpan={order.Products.length}
+                                            className="text-center align-top px-2 py-4 border"
+                                        >
                                             {order.oderDate}
                                         </td>
-                                        <td rowSpan={order.Products.length} className="align-top px-2 py-4 border">
+                                        <td
+                                            rowSpan={order.Products.length}
+                                            className="align-top px-2 py-4 border"
+                                        >
                                             {order.paymentMethod}
                                         </td>
+                                        {/* <td
+                                            rowSpan={order.Products.length}
+                                            className="align-top px-2 py-4 border"
+                                        >
+                                            {order.totalPrice}
+                                        </td> */}
                                     </>
                                 )}
                                 <td className="px-2 py-4 border">
                                     {product.NameProducts}
                                 </td>
-                                <td className="text-center px-2 py-4 border">{product.color}</td>
+                                <td className="text-center px-2 py-4 border">
+                                    {product.color}
+                                </td>
                                 <td className="text-center px-2 py-4 border">
                                     {product.quantity}
                                 </td>
-                                <td className="text-center px-2 py-4 border">{product.size}</td>
-                                {index === 0 && id !== '4' && (
-                                    <td rowSpan={order.Products.length} className="align-top px-2 py-4 border">
-                                        <button onClick={() => handleConfirm(order.orderID)} className="bg-blue-600 text-white p-2 rounded-md">Xác nhận</button>
+                                <td className="text-center px-2 py-4 border">
+                                    {product.size}
+                                </td>
+                                
+                                {index === 0 && (
+                                    <td
+                                    rowSpan={order.Products.length}
+                                    className="text-center px-2 py-4 border"
+                                	>
+                                    {order.totalPrice}
+                                </td>
+                                )}
+                                {index === 0 && id !== "4" && (
+                                    <td
+                                        rowSpan={order.Products.length}
+                                        className="align-top px-2 py-4 border"
+                                    >
+                                        <button
+                                            onClick={() =>
+                                                handleConfirm(order.orderID)
+                                            }
+                                            className="bg-blue-600 text-white p-2 rounded-md"
+                                        >
+                                            Xác nhận
+                                        </button>
                                     </td>
                                 )}
+ 				
                             </tr>
                         ))
-                    ))}
+                    )}
                 </tbody>
             </table>
         </div>
